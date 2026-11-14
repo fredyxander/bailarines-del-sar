@@ -24,7 +24,8 @@
     .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
   // ---- Map & basemaps -------------------------------------------------------
-  const map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([8, -60], 3);
+  const map = L.map('map', { zoomControl: false, worldCopyJump: true }).setView([12, -60], 3);
+  L.control.zoom({ position: 'topright' }).addTo(map);
   const basemaps = {
     'Satellite': L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -33,8 +34,8 @@
       { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }),
   };
   basemaps['Satellite'].addTo(map);
-  L.control.layers(basemaps, null, { position: 'bottomleft' }).addTo(map);
-  L.control.scale({ imperial: false, position: 'bottomright' }).addTo(map);
+  L.control.layers(basemaps, null, { position: 'topright' }).addTo(map);
+  L.control.scale({ imperial: false, position: 'topright' }).addTo(map);
   map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   map.attributionControl.addAttribution('NISAR: NASA/JPL-Caltech &amp; ISRO via ASF');
 
@@ -224,7 +225,9 @@
       return r.json();
     });
     state.meta = meta;
+    $('site-title').textContent = state.site.name;
     $('empty').hidden = true;
+    document.body.classList.remove('is-empty');
     const b = meta.bounds_wgs84;
     const bounds = [[b.south, b.west], [b.north, b.east]];
     for (const k of Object.keys(overlays)) { if (overlays[k]) overlays[k].remove(); }
@@ -235,6 +238,10 @@
 
     $('date-left').textContent = fmtDate(meta.before.date);
     $('date-right').textContent = fmtDate(meta.after.date);
+    $('hero-dates').innerHTML = '';
+    const hb = document.createElement('span'); hb.className = 'b'; hb.textContent = fmtDate(meta.before.date);
+    const ha = document.createElement('span'); ha.className = 'a'; ha.textContent = fmtDate(meta.after.date);
+    $('hero-dates').append(hb, ' → ', ha, ` · ${meta.after.collection} ${meta.after.crid}`);
     renderScenes(meta);
     markTimeline(meta);
 
@@ -262,6 +269,7 @@
 
   function showEmpty() {
     $('empty').hidden = false;
+    document.body.classList.add('is-empty');
     wrap.classList.add('hidden-swipe');
     for (const id of ['site', 'mode-swipe', 'mode-change']) $(id).disabled = true;
   }
