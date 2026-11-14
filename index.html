@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surface Dance — NISAR change atlas</title>
+<meta name="description" content="Two dates, one surface: an open atlas of Earth's surface change read by NISAR L-band radar. Los Bailarines del SAR, NASA Space Apps Challenge 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="demo-banner" class="demo-banner" role="status" hidden>
+  <b>Synthetic demo</b> — invented test scenes to try the viewer. This is <u>not</u> NISAR data and shows no real change. <a href="./">Leave demo</a>
+</div>
+<header class="masthead">
+  <div class="kicker">NISAR · L-band radar · Atlas of surface change</div>
+  <h1>Surface <em>Dance</em></h1>
+  <p class="lede">Two dates, one surface. Radar sees through cloud, night and snow. Slide between the two moments and watch the ground move.</p>
+  <nav class="mastnav">
+    <a href="#how">How to read it</a>
+    <a href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Open source ↗</a>
+  </nav>
+</header>
+
+<main class="stage">
+  <section class="plate">
+    <div class="map-wrap">
+      <div id="map" aria-label="Map"></div>
+      <div id="swipe-handle" class="swipe-handle" role="slider" tabindex="0"
+           aria-label="Slide between the two dates" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <span class="knob" aria-hidden="true"><i>‹</i><i>›</i></span>
+      </div>
+      <div id="date-left" class="date-tag left"></div>
+      <div id="date-right" class="date-tag right"></div>
+
+      <div id="empty" class="overture" hidden>
+        <p class="kicker">Overture</p>
+        <h2>The stage is set.</h2>
+        <p>Radar scenes for our study areas are on their way. When they arrive, this map becomes a duet between two dates:</p>
+        <ol>
+          <li><b>Slide</b> the line to move between the first and the second acquisition.</li>
+          <li><b>Switch</b> to the change map to see where the radar echo grew or faded.</li>
+          <li><b>Choose a channel</b>: each polarization listens to a different kind of surface.</li>
+        </ol>
+      </div>
+    </div>
+
+    <figure class="archive" aria-labelledby="archive-cap">
+      <figcaption id="archive-cap"><span class="kicker">The score</span> NISAR public archive, by collection. We only compare dates inside one collection.</figcaption>
+      <div id="timeline" class="timeline"></div>
+    </figure>
+  </section>
+
+  <aside class="notes">
+    <section class="step">
+      <h3><span>01</span> Place</h3>
+      <select id="site" aria-label="Study area"></select>
+    </section>
+
+    <section class="step">
+      <h3><span>02</span> Channel</h3>
+      <div id="pol" class="chips" role="radiogroup" aria-label="Polarization"></div>
+      <p id="pol-note" class="note"></p>
+    </section>
+
+    <section class="step">
+      <h3><span>03</span> View</h3>
+      <div class="toggle" role="group" aria-label="View">
+        <button id="mode-swipe" aria-pressed="true">Two dates</button>
+        <button id="mode-change" aria-pressed="false">What changed</button>
+      </div>
+      <label id="opacity-row" class="range" hidden>Change layer opacity
+        <input id="opacity" type="range" min="0" max="100" value="85">
+      </label>
+      <div id="legend" class="legend" hidden>
+        <div class="ramp"></div>
+        <div class="ticks mono"><span id="leg-min"></span><span>0 dB</span><span id="leg-max"></span></div>
+        <p><i class="dot fade"></i>Echo faded: smoother or wetter surface, such as open water.</p>
+        <p><i class="dot grow"></i>Echo grew: rougher surface or more vegetation structure.</p>
+      </div>
+    </section>
+
+    <section class="step">
+      <h3><span>04</span> The two dates</h3>
+      <table class="ledger mono" id="scenes">
+        <thead><tr><th></th><th class="c-before">Before</th><th class="c-after">After</th></tr></thead>
+        <tbody>
+          <tr><th>Date</th><td>—</td><td>—</td></tr>
+          <tr><th>Collection</th><td>—</td><td>—</td></tr>
+          <tr><th>CRID</th><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <p id="files" class="note mono"></p>
+    </section>
+
+    <section class="step" id="stats" hidden>
+      <h3><span>05</span> What changed</h3>
+      <div class="figures">
+        <div><b id="s-dec" class="mono"></b><span>of the area faded</span></div>
+        <div><b id="s-inc" class="mono"></b><span>of the area grew</span></div>
+      </div>
+      <p class="note">Change of at least <span id="thr" class="mono"></span> dB. Median shift <span id="s-med" class="mono"></span>.</p>
+      <dl id="processing" class="spec mono"></dl>
+    </section>
+
+    <section class="step" id="how">
+      <h3><span>06</span> How to read it</h3>
+      <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, crowns of trees and broken ice scatter it back and look bright.</p>
+      <p>A change in that echo is a change in roughness or moisture. Flooding, harvest or ice movement are <em>interpretations</em> of it, and we label them that way. Each comparison stays inside one NISAR collection and CRID, so what moves is the ground, not the processing.</p>
+    </section>
+
+    <footer class="colophon">
+      <p><b>Los Bailarines del SAR</b> · NASA Space Apps Challenge 2026 · Bogotá. Code under the MIT licence.</p>
+      <p>NISAR data: NASA/JPL-Caltech &amp; ISRO, distributed by the Alaska Satellite Facility. Not endorsed by NASA.</p>
+    </footer>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
