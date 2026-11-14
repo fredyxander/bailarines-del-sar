@@ -3,26 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Surface Dance — NISAR change atlas</title>
-<meta name="description" content="Two dates, one surface: an open atlas of Earth's surface change read by NISAR L-band radar. Los Bailarines del SAR, NASA Space Apps Challenge 2026.">
+<title>Surface Dance — NISAR change explorer</title>
+<meta name="description" content="Two dates, one surface: explore Earth's surface change read by NISAR L-band radar. Los Bailarines del SAR, NASA Space Apps Challenge 2026.">
+<meta name="theme-color" content="#05070d">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="demo-banner" class="demo-banner" role="status" hidden>
-  <b>Synthetic demo</b> — invented test scenes to try the viewer. This is <u>not</u> NISAR data and shows no real change. <a href="./">Leave demo</a>
+  <b>Synthetic demo</b> Invented test scenes to try the viewer. Not NISAR data, no real change. <a href="./">Leave demo →</a>
 </div>
-<header class="masthead">
-  <div class="kicker">NISAR · L-band radar · Atlas of surface change</div>
-  <h1>Surface <em>Dance</em></h1>
-  <p class="lede">Two dates, one surface. Radar sees through cloud, night and snow. Slide between the two moments and watch the ground move.</p>
-  <nav class="mastnav">
+
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Surface Dance home">
+    <svg class="orbit" viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <radialGradient id="earth" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#5cc8ff"/><stop offset=".55" stop-color="#1b4f8a"/><stop offset="1" stop-color="#0a1830"/></radialGradient>
+      </defs>
+      <circle cx="24" cy="24" r="10" fill="url(#earth)"/>
+      <g transform="rotate(-25 24 24)">
+        <ellipse cx="24" cy="24" rx="21" ry="8" fill="none" stroke="rgba(160,190,255,.4)" stroke-width="1"/>
+        <circle class="sat" r="2.6" fill="#ff4fa3">
+          <animateMotion dur="7s" repeatCount="indefinite" path="M45,24 a21,8 0 1,1 -42,0 a21,8 0 1,1 42,0"/>
+        </circle>
+      </g>
+    </svg>
+    <span class="brand-text">
+      <span class="brand-name">Surface <em>Dance</em></span>
+      <span class="brand-sub">NISAR radar · change explorer</span>
+    </span>
+  </a>
+  <ul class="telemetry" aria-label="About NISAR">
+    <li><span>Band</span>L · 24 cm</li>
+    <li><span>Orbit</span>747 km</li>
+    <li><span>Repeat</span>12 days</li>
+    <li><span>Sees</span>day · night · cloud</li>
+  </ul>
+  <nav class="toplinks">
     <a href="#how">How to read it</a>
-    <a href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Open source ↗</a>
+    <a class="gh" href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Open source ↗</a>
   </nav>
 </header>
 
@@ -41,24 +64,25 @@
       </button>
 
       <div id="empty" class="overture" hidden>
-        <p class="kicker">Overture</p>
+        <div class="radar" aria-hidden="true"><span></span></div>
+        <p class="eyebrow">Awaiting first light</p>
         <h2>The stage is set.</h2>
-        <p>Radar scenes for our study areas are on their way. When they arrive, this map becomes a duet between two dates:</p>
+        <p>Radar scenes for our study areas are on their way. When they land, this map becomes a duet between two dates.</p>
         <ol>
-          <li><b>See what changed</b>: blue where the radar echo faded, red where it grew.</li>
-          <li><b>Play the dance</b>, or slide the line yourself, to move between the two dates.</li>
-          <li><b>Choose a channel</b>: each polarization listens to a different kind of surface.</li>
+          <li><b>See what changed</b> — blue where the radar echo faded, red where it grew.</li>
+          <li><b>Play the dance</b>, or drag the line, to travel between the two dates.</li>
+          <li><b>Switch channel</b> — each polarization listens to a different kind of surface.</li>
         </ol>
       </div>
     </div>
 
     <figure class="archive" aria-labelledby="archive-cap">
-      <figcaption id="archive-cap"><span class="kicker">The score</span> NISAR public archive, by collection. We only compare dates inside one collection.</figcaption>
+      <figcaption id="archive-cap"><span class="eyebrow">Mission archive</span> NISAR public collections. We only compare dates inside one collection.</figcaption>
       <div id="timeline" class="timeline"></div>
     </figure>
   </section>
 
-  <aside class="notes">
+  <aside class="panel">
     <section class="step">
       <h3><span>01</span> Place</h3>
       <select id="site" aria-label="Study area"></select>
@@ -82,8 +106,8 @@
       <div id="legend" class="legend" hidden>
         <div class="ramp"></div>
         <div class="ticks mono"><span id="leg-min"></span><span>0 dB</span><span id="leg-max"></span></div>
-        <p><i class="dot fade"></i>Echo faded: smoother or wetter surface, such as open water.</p>
-        <p><i class="dot grow"></i>Echo grew: rougher surface or more vegetation structure.</p>
+        <p><i class="dot fade"></i>Echo faded — smoother or wetter surface, such as open water.</p>
+        <p><i class="dot grow"></i>Echo grew — rougher surface or more vegetation structure.</p>
       </div>
     </section>
 
@@ -103,21 +127,21 @@
     <section class="step" id="stats" hidden>
       <h3><span>05</span> What changed</h3>
       <div class="figures">
-        <div><b id="s-dec" class="mono"></b><span>of the area faded</span></div>
-        <div><b id="s-inc" class="mono"></b><span>of the area grew</span></div>
+        <div class="fig fade"><b id="s-dec"></b><span>of the area faded</span></div>
+        <div class="fig grow"><b id="s-inc"></b><span>of the area grew</span></div>
       </div>
-      <p class="note">Change of at least <span id="thr" class="mono"></span> dB. Median shift <span id="s-med" class="mono"></span>.</p>
+      <p class="note">Change of at least <span id="thr" class="mono"></span> dB · median shift <span id="s-med" class="mono"></span></p>
       <dl id="processing" class="spec mono"></dl>
     </section>
 
     <section class="step" id="how">
       <h3><span>06</span> How to read it</h3>
-      <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, crowns of trees and broken ice scatter it back and look bright.</p>
+      <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, tree crowns and broken ice scatter it back and look bright.</p>
       <p>A change in that echo is a change in roughness or moisture. Flooding, harvest or ice movement are <em>interpretations</em> of it, and we label them that way. Each comparison stays inside one NISAR collection and CRID, so what moves is the ground, not the processing.</p>
     </section>
 
     <footer class="colophon">
-      <p><b>Los Bailarines del SAR</b> · NASA Space Apps Challenge 2026 · Bogotá. Code under the MIT licence.</p>
+      <p><b>Los Bailarines del SAR</b> · NASA Space Apps Challenge 2026 · Bogotá · MIT licence</p>
       <p>NISAR data: NASA/JPL-Caltech &amp; ISRO, distributed by the Alaska Satellite Facility. Not endorsed by NASA.</p>
     </footer>
   </aside>
