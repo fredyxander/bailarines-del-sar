@@ -3,8 +3,11 @@
 (function () {
   'use strict';
 
-  const LAYERS = 'layers';
   const $ = (id) => document.getElementById(id);
+  // ?demo=1 loads synthetic test layers from web/demo/ under a visible banner.
+  const DEMO = new URLSearchParams(location.search).get('demo') === '1';
+  const LAYERS = DEMO ? 'demo' : 'layers';
+  if (DEMO) { $('demo-banner').hidden = false; document.body.classList.add('is-demo'); }
   const wrap = document.querySelector('.map-wrap');
   const handle = $('swipe-handle');
 
@@ -147,6 +150,7 @@
   function syncUrl() {
     if (!state.site) return;
     const q = new URLSearchParams({ site: state.site.id, pol: state.pol, mode: state.mode });
+    if (DEMO) q.set('demo', '1');
     history.replaceState(null, '', '?' + q.toString());
   }
 

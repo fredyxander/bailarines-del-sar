@@ -66,6 +66,14 @@ Ver [`docs/DATOS.md`](docs/DATOS.md). Colección **NISAR PROVISIONAL** (17 jun �
 
 Tinjacá · Fredy · Santiago · Daira · Moneeb
 
+## Demo sintético / Synthetic demo
+
+Para probar el visor sin datos reales: https://fredyxander.github.io/bailarines-del-sar/?demo=1
+
+Las escenas de `web/demo/` las genera `pipeline/make_demo_data.py`: son **sintéticas, no son datos NISAR y no muestran ningún cambio real**. El visor solo las carga con `?demo=1` y bajo una franja visible de aviso. No forman parte de los resultados del proyecto.
+
+*The scenes in `web/demo/` are synthetic test data produced by `pipeline/make_demo_data.py`. They are not NISAR data, show no real change, are only loaded with `?demo=1` under a visible banner, and are not part of the project's results.*
+
 ## Use of AI tools
 
 Parts of this repository were written with the assistance of AI coding tools. All method choices, polarization selections, thresholds and scientific interpretations were specified, reviewed and approved by the human team members named in this submission. AI-assisted components are limited to code drafting, documentation and workflow automation. No radar scene, measurement, result or figure in this project was generated, synthesised or altered by an AI tool.
