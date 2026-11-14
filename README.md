@@ -8,7 +8,7 @@
 
 Una aplicación web interactiva que muestra **cómo cambia la superficie de la Tierra** entre dos fechas, a partir de imágenes de radar de apertura sintética (SAR) de la misión NISAR. El radar ve de día y de noche, a través de nubes y humo, y es sensible a la rugosidad y a la humedad de la superficie.
 
-La app se publica como una ruta nueva dentro de OLEA: **`/olea/observatory/`**.
+**Demo en vivo:** https://fredyxander.github.io/bailarines-del-sar/
 
 - **Zonas de estudio:** _por definir (2 zonas)_
 - **Pregunta:** _por definir (una frase)_
@@ -50,7 +50,7 @@ Tinjacá · Fredy · Santiago · Daira · Moneeb
 
 ## 🇬🇧 English
 
-**Los Bailarines del SAR** ("The SAR Dancers") is an interactive web app for NASA Space Apps Challenge 2026. It shows **how Earth's surface changes** between two dates using NISAR synthetic aperture radar data. It will be served as a new route inside OLEA: `/olea/observatory/`.
+**Los Bailarines del SAR** ("The SAR Dancers") is an interactive web app for NASA Space Apps Challenge 2026. It shows **how Earth's surface changes** between two dates using NISAR synthetic aperture radar data. Live demo: https://fredyxander.github.io/bailarines-del-sar/
 
 - `pipeline/change_detection.py` reads two co-registered scenes (any GDAL-readable raster: GeoTIFF or an HDF5 subdataset), computes the backscatter change in dB and exports PNG layers plus bounds for the web viewer.
 - `web/` is a before/after swipe viewer.
