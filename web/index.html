@@ -77,6 +77,8 @@
     document.getElementById('stats').textContent =
       `Cambio ≥ ${m.threshold_db} dB: +${m.pct_increase.toFixed(1)}% / −${m.pct_decrease.toFixed(1)}% del área.`;
   }).catch(() => {
+    ['swipe', 'swipe-labels', 'change'].forEach(id => document.getElementById(id).remove());
+    document.querySelector('.tabs').remove();
     document.querySelector('main').insertAdjacentHTML('beforeend',
       '<div class="empty">Aún no hay capas. Ejecuta <code>pipeline/change_detection.py</code> para generarlas.</div>');
   });
