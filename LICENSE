@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-The contents of `tutorial/` are derived from
-https://github.com/asc-csa/Synthetic_Aperture_Radar_Tutorial
-Copyright (c) His Majesty the King in Right of Canada, as represented by the
-Canadian Space Agency, 2022, and are distributed under their own MIT license,
-included in `tutorial/LICENSE-CSA`.

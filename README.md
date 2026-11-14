@@ -42,7 +42,7 @@ Tinjacá · Fredy · Santiago · Daira · Moneeb
 
 ## Créditos y licencia
 
-- Código: [MIT](LICENSE).
+- Código: [MIT](LICENSE). Avisos de terceros en [`NOTICE`](NOTICE).
 - `tutorial/`: © Agencia Espacial Canadiense, licencia MIT propia ([`tutorial/LICENSE-CSA`](tutorial/LICENSE-CSA)). El uso de este material no implica respaldo de la CSA.
 - Datos NISAR: NASA/JPL-Caltech e ISRO, distribuidos por ASF DAAC. NASA no respalda este proyecto.
 
