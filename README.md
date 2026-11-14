@@ -40,6 +40,10 @@ Ver [`docs/DATOS.md`](docs/DATOS.md). Colección **NISAR PROVISIONAL** (17 jun �
 
 Tinjacá · Fredy · Santiago · Daira · Moneeb
 
+## Use of AI tools
+
+Parts of this repository were written with the assistance of AI coding tools. All method choices, polarization selections, thresholds and scientific interpretations were specified, reviewed and approved by the human team members named in this submission. AI-assisted components are limited to code drafting, documentation and workflow automation. No radar scene, measurement, result or figure in this project was generated, synthesised or altered by an AI tool.
+
 ## Créditos y licencia
 
 - Código: [MIT](LICENSE). Avisos de terceros en [`NOTICE`](NOTICE).
