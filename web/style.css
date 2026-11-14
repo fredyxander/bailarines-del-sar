@@ -22,6 +22,12 @@ body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 v
 .mono { font-family: var(--mono); font-feature-settings: "zero" 1; }
 a { color: inherit; }
 
+/* Demo banner */
+.demo-banner { position: sticky; top: 0; z-index: 2000; background: repeating-linear-gradient(135deg, #f2c94c 0 14px, #e9b93a 14px 28px); color: var(--ink); padding: 8px 28px; font: 500 13px/1.4 var(--sans); border-bottom: 2px solid var(--ink); }
+.demo-banner b { font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; margin-right: 4px; }
+.demo-banner a { margin-left: 8px; font-weight: 600; }
+.is-demo .map-wrap { outline: 4px dashed #e9b93a; outline-offset: -4px; }
+
 /* Masthead */
 .masthead { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "kicker nav" "title nav" "lede nav"; column-gap: 24px; padding: 22px 28px 16px; border-bottom: 2px solid var(--ink); }
 .kicker { font: 500 11px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--magenta); }
