@@ -1,87 +1,86 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observatorio SAR — Los Bailarines del SAR</title>
-<style>
-  :root { --bg:#0b1020; --fg:#e8ecf5; --muted:#9aa4bd; --accent:#f2a33a; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--fg); }
-  main { max-width:960px; margin:0 auto; padding:16px; }
-  h1 { font-size:1.4rem; margin:.5rem 0; }
-  p { color:var(--muted); }
-  .tabs button { background:none; border:1px solid var(--muted); color:var(--fg); padding:.4rem .8rem; border-radius:6px; cursor:pointer; }
-  .tabs button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
-  .viewer { position:relative; margin-top:12px; user-select:none; touch-action:none; }
-  .viewer img { display:block; width:100%; height:auto; }
-  .viewer .top { position:absolute; inset:0; clip-path:inset(0 50% 0 0); }
-  .viewer .handle { position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--accent); cursor:ew-resize; }
-  .labels { display:flex; justify-content:space-between; font-size:.85rem; color:var(--muted); margin-top:4px; }
-  #change { display:none; }
-  .empty { padding:2rem; border:1px dashed var(--muted); border-radius:8px; text-align:center; }
-</style>
+<title>Surface Dance Observatory</title>
+<meta name="description" content="Interactive NISAR radar change viewer by Los Bailarines del SAR — NASA Space Apps Challenge 2026.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
-  <h1>Observatorio SAR · La danza de la superficie</h1>
-  <p>Arrastra la línea para comparar dos fechas de radar NISAR. Los tonos claros indican mayor retrodispersión (superficies rugosas o con estructura) y los oscuros, menor (agua en calma, superficies lisas).</p>
-  <div class="tabs">
-    <button id="t-swipe" aria-pressed="true">Antes / después</button>
-    <button id="t-change" aria-pressed="false">Mapa de cambio</button>
+<header class="top">
+  <div>
+    <h1>Surface Dance Observatory</h1>
+    <p class="tag">How Earth's surface moved between two dates, seen by NISAR L-band radar.</p>
   </div>
+  <a class="repo" href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Source code</a>
+</header>
 
-  <div id="swipe" class="viewer">
-    <img src="layers/before.png" alt="Escena fecha 1" id="img-before">
-    <img src="layers/after.png" alt="Escena fecha 2" class="top" id="img-after">
-    <div class="handle" id="handle"></div>
-  </div>
-  <div class="labels" id="swipe-labels"><span id="l-before">Fecha 1</span><span id="l-after">Fecha 2</span></div>
+<div class="layout">
+  <section class="map-wrap">
+    <div id="map" aria-label="Map"></div>
+    <div id="swipe-handle" class="swipe-handle" role="slider" tabindex="0"
+         aria-label="Swipe between dates" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+      <span class="grip" aria-hidden="true">⟷</span>
+    </div>
+    <div id="date-left" class="date-chip left"></div>
+    <div id="date-right" class="date-chip right"></div>
+    <div id="empty" class="empty" hidden>
+      <strong>No processed scenes yet.</strong>
+      <span>Run <code>pipeline/change_detection.py</code> to publish layers.</span>
+    </div>
+  </section>
 
-  <div id="change" class="viewer">
-    <img src="layers/change.png" alt="Cambio en dB">
-    <p>Rojo: aumento de retrodispersión · Azul: disminución. <span id="stats"></span></p>
-  </div>
-</main>
-<script>
-  const swipe = document.getElementById('swipe');
-  const after = document.getElementById('img-after');
-  const handle = document.getElementById('handle');
-  function setPos(clientX) {
-    const r = swipe.getBoundingClientRect();
-    const pct = Math.min(100, Math.max(0, ((clientX - r.left) / r.width) * 100));
-    // La capa "después" se ve a la derecha de la línea.
-    after.style.clipPath = `inset(0 0 0 ${pct}%)`;
-    handle.style.left = pct + '%';
-  }
-  setPos(swipe.getBoundingClientRect().left + swipe.clientWidth / 2);
-  let dragging = false;
-  swipe.addEventListener('pointerdown', e => { dragging = true; swipe.setPointerCapture(e.pointerId); setPos(e.clientX); });
-  swipe.addEventListener('pointermove', e => { if (dragging) setPos(e.clientX); });
-  swipe.addEventListener('pointerup', () => { dragging = false; });
+  <aside class="panel">
+    <div class="controls">
+      <label>Study area
+        <select id="site"></select>
+      </label>
+      <label>Polarization
+        <select id="pol"></select>
+      </label>
+      <div class="seg" role="group" aria-label="View">
+        <button id="mode-swipe" aria-pressed="true">Before / after</button>
+        <button id="mode-change" aria-pressed="false">Change map</button>
+      </div>
+      <label id="opacity-row" hidden>Change layer opacity
+        <input id="opacity" type="range" min="0" max="100" value="85">
+      </label>
+    </div>
 
-  const tabs = { swipe: document.getElementById('t-swipe'), change: document.getElementById('t-change') };
-  function show(which) {
-    document.getElementById('swipe').style.display = which === 'swipe' ? 'block' : 'none';
-    document.getElementById('swipe-labels').style.display = which === 'swipe' ? 'flex' : 'none';
-    document.getElementById('change').style.display = which === 'change' ? 'block' : 'none';
-    tabs.swipe.setAttribute('aria-pressed', which === 'swipe');
-    tabs.change.setAttribute('aria-pressed', which === 'change');
-  }
-  tabs.swipe.onclick = () => show('swipe');
-  tabs.change.onclick = () => show('change');
+    <div id="legend" class="legend" hidden>
+      <div class="bar"></div>
+      <div class="ticks"><span id="leg-min"></span><span>0 dB</span><span id="leg-max"></span></div>
+      <p><span class="sw blue"></span> Backscatter decreased — smoother or wetter surface, e.g. open water.<br>
+         <span class="sw red"></span> Backscatter increased — rougher surface or more vegetation structure.</p>
+    </div>
 
-  fetch('layers/meta.json').then(r => r.json()).then(m => {
-    document.getElementById('l-before').textContent = m.before.label;
-    document.getElementById('l-after').textContent = m.after.label;
-    document.getElementById('stats').textContent =
-      `Cambio ≥ ${m.threshold_db} dB: +${m.pct_increase.toFixed(1)}% / −${m.pct_decrease.toFixed(1)}% del área.`;
-  }).catch(() => {
-    ['swipe', 'swipe-labels', 'change'].forEach(id => document.getElementById(id).remove());
-    document.querySelector('.tabs').remove();
-    document.querySelector('main').insertAdjacentHTML('beforeend',
-      '<div class="empty">Aún no hay capas. Ejecuta <code>pipeline/change_detection.py</code> para generarlas.</div>');
-  });
-</script>
+    <div id="stats" class="card" hidden></div>
+
+    <div class="card">
+      <h2>Scenes</h2>
+      <dl id="scenes" class="scenes"></dl>
+    </div>
+
+    <div class="card">
+      <h2>Processing</h2>
+      <dl id="processing"></dl>
+    </div>
+
+    <div class="card caveat">
+      <h2>Read with care</h2>
+      <p>A change in radar backscatter is a change in surface roughness or moisture. Flooding, crop growth or ice movement are <em>interpretations</em> of it, not direct measurements. Both scenes always come from the same NISAR collection and CRID; we do not compare across processing baselines.</p>
+    </div>
+
+    <footer class="foot">
+      Los Bailarines del SAR · NASA Space Apps Challenge 2026 · MIT licence.<br>
+      NISAR data: NASA/JPL-Caltech & ISRO via ASF DAAC. Not endorsed by NASA.
+    </footer>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
