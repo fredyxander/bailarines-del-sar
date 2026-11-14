@@ -59,6 +59,11 @@ a { color: inherit; }
 .date-tag:empty { display: none; }
 .hidden-swipe .swipe-handle, .hidden-swipe .date-tag { display: none; }
 
+.play { position: absolute; z-index: 800; left: 50%; bottom: 28px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); padding: 8px 16px 8px 12px; font: 500 13px/1 var(--mono); letter-spacing: .04em; cursor: pointer; box-shadow: 4px 4px 0 rgba(22,21,19,.85); }
+.play:hover { background: var(--paper-2); }
+.play[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.play-icon { font-size: 11px; width: 14px; text-align: center; }
+
 /* Overture (empty state) */
 .overture { position: absolute; z-index: 900; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100% - 32px)); background: var(--paper); border: 1px solid var(--ink); box-shadow: 8px 8px 0 rgba(22,21,19,.85); padding: 22px 26px 18px; }
 .overture h2 { font: 600 30px/1.1 var(--serif); margin: 6px 0 10px; }

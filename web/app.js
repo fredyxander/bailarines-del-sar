@@ -45,7 +45,7 @@
 
   // ---- State ----------------------------------------------------------------
   const params = new URLSearchParams(location.search);
-  const state = { index: null, site: null, pol: null, mode: params.get('mode') === 'change' ? 'change' : 'swipe', pct: 0.5, meta: null };
+  const state = { index: null, site: null, pol: null, mode: params.get('mode') === 'swipe' ? 'swipe' : 'change', pct: 0.5, meta: null };
   const overlays = { before: null, after: null, change: null };
 
   // ---- Archive timeline -------------------------------------------------------
@@ -129,9 +129,41 @@
   });
   map.on('move zoom resize viewreset zoomend moveend', updateClip);
 
+  // ---- Play: the line sways between the two dates on its own --------------------
+  const AMP = 0.45, PERIOD = 5000;
+  let raf = null;
+  function play() {
+    if (state.mode !== 'swipe') setMode('swipe');
+    const start = performance.now();
+    const phase = Math.asin(Math.max(-1, Math.min(1, (state.pct - 0.5) / AMP)));
+    const step = (now) => {
+      state.pct = 0.5 + AMP * Math.sin(phase + (2 * Math.PI * (now - start)) / PERIOD);
+      updateClip();
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    setPlayButton(true);
+  }
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    setPlayButton(false);
+  }
+  function setPlayButton(on) {
+    const b = $('play');
+    b.setAttribute('aria-pressed', on);
+    b.querySelector('.play-icon').textContent = on ? '❚❚' : '▶';
+    b.querySelector('.play-label').textContent = on ? 'Pause' : 'Play the dance';
+  }
+  $('play').onclick = () => (raf ? stop() : play());
+  handle.addEventListener('pointerdown', stop);
+  handle.addEventListener('keydown', stop, true);
+
   // ---- Rendering --------------------------------------------------------------
   function setMode(mode) {
     state.mode = mode;
+    if (mode !== 'swipe') stop();
+    $('play').hidden = !state.meta;
     $('mode-swipe').setAttribute('aria-pressed', mode === 'swipe');
     $('mode-change').setAttribute('aria-pressed', mode === 'change');
     wrap.classList.toggle('hidden-swipe', mode !== 'swipe' || !state.meta);
