@@ -1,0 +1,19 @@
+# Datos pesados: no se suben
+data/*
+!data/.gitkeep
+*.h5
+*.tif
+*.tiff
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# OS / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
