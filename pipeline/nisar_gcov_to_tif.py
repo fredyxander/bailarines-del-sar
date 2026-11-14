@@ -89,6 +89,7 @@ def index_range(coords: np.ndarray, lo: float, hi: float) -> tuple[int, int]:
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")  # acentos en la consola de Windows
+        sys.stderr.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("h5", help="Archivo NISAR GCOV (.h5)")
     p.add_argument("--list", action="store_true", help="Mostrar estructura y salir")

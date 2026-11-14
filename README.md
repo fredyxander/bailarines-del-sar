@@ -58,6 +58,22 @@ Las rutas internas del HDF5 de NISAR GCOV (`/science/LSAR/GCOV/grids/frequencyA/
 
 Después de hacer merge a `main`, las capas que estén en `web/layers/` se publican automáticamente.
 
+## Cómo se revisan los cambios
+
+`main` está protegida: todo entra por pull request y **solo se fusiona cuando las pruebas pasan**.
+
+1. **Vista previa:** cada PR publica una copia del sitio en `https://fredyxander.github.io/bailarines-del-sar/pr-preview/pr-<número>/` y deja el link como comentario en el PR. Se borra al cerrarlo.
+2. **Pruebas automáticas (CI):** el pipeline con datos sintéticos tipo NISAR, la sintaxis del JavaScript y el visor abierto en un navegador (barra, vistas, polarizaciones). Si algo falla, el PR no se puede fusionar.
+3. **Al fusionar a `main`** se publica el sitio principal.
+
+Para correr las mismas pruebas en local:
+
+```bash
+pip install -r requirements.txt playwright && python -m playwright install chromium
+python tests/test_pipeline.py
+python tests/smoke_test.py
+```
+
 ## Datos usados
 
 Ver [`docs/DATOS.md`](docs/DATOS.md). Colección **NISAR PROVISIONAL** (17 jun – 23 oct 2026) desde [ASF Vertex](https://search.asf.alaska.edu). Hay un hueco del instrumento entre el 27 jul y el 10 ago 2026.

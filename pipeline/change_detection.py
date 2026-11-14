@@ -185,6 +185,7 @@ def slug(text: str) -> str:
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")  # acentos en la consola de Windows
+        sys.stderr.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("before", help="Raster de la fecha 1 (potencia lineal, salvo --db)")
     p.add_argument("after", help="Raster de la fecha 2")

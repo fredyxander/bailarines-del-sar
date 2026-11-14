@@ -1,0 +1,33 @@
+# Pruebas automáticas en cada PR. Si fallan, el PR no se puede fusionar
+# (check obligatorio "checks" en la protección de main).
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Python compiles
+        run: python -m py_compile pipeline/*.py tests/*.py
+      - name: JavaScript syntax
+        run: node --check web/app.js
+      - name: Pipeline tests (synthetic NISAR-like data)
+        run: python tests/test_pipeline.py
+      - name: Viewer smoke test (headless browser)
+        run: python tests/smoke_test.py
