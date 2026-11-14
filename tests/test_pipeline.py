@@ -89,6 +89,12 @@ def main() -> None:
         print(f"ok  cambio detectado {got:.1f} % vs {expected:.1f} % esperado")
 
         run(str(PIPE / "change_detection.py"), str(t / "a.tif"), str(t / "b.tif"),
+            "--site", "recorte", "--pol", "HHHH", "--before-info", info_a, "--after-info", info_b,
+            "--bbox", "-74.42,10.99,-74.37,11.04", "--out-root", str(out))
+        assert (out / "recorte" / "HHHH" / "change.png").exists()
+        print("ok  --bbox con longitudes negativas (oeste) en change_detection")
+
+        run(str(PIPE / "change_detection.py"), str(t / "a.tif"), str(t / "b.tif"),
             "--site", "x", "--pol", "HHHH", "--before-info", "BETA,P05000,2026-01-10",
             "--after-info", info_b, "--out-root", str(out), ok=False)
         print("ok  colecciones/CRID distintos -> rechazado")
