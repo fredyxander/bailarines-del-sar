@@ -1,0 +1,27 @@
+# Publica web/ en la raíz de la rama gh-pages (sitio principal) en cada push a main.
+# Las vistas previas de los PR viven en gh-pages/pr-preview/ y no se tocan.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: touch web/.nojekyll
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: web
+          branch: gh-pages
+          clean-exclude: pr-preview/

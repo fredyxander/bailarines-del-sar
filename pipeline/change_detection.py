@@ -182,9 +182,27 @@ def slug(text: str) -> str:
     return s
 
 
+def _join_negative_values(argv: list[str], flags: tuple[str, ...]) -> list[str]:
+    """`--bbox -74.6,10.6,...` -> `--bbox=-74.6,10.6,...`.
+
+    Antes de Python 3.14, argparse toma un valor que empieza con '-' (longitudes
+    oeste) como si fuera otra opción y falla.
+    """
+    out, i = [], 0
+    while i < len(argv):
+        if argv[i] in flags and i + 1 < len(argv):
+            out.append(f"{argv[i]}={argv[i + 1]}")
+            i += 2
+        else:
+            out.append(argv[i])
+            i += 1
+    return out
+
+
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")  # acentos en la consola de Windows
+        sys.stderr.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("before", help="Raster de la fecha 1 (potencia lineal, salvo --db)")
     p.add_argument("after", help="Raster de la fecha 2")
@@ -202,7 +220,7 @@ def main() -> None:
     p.add_argument("--threshold", type=float, default=3.0, help="|cambio| en dB considerado significativo")
     p.add_argument("--max-size", type=int, default=2048, help="Lado mayor de las imágenes web, en píxeles")
     p.add_argument("--out-root", default="web/layers")
-    args = p.parse_args()
+    args = p.parse_args(_join_negative_values(sys.argv[1:], ("--bbox",)))
 
     if args.window % 2 == 0:
         p.error("--window debe ser impar")

@@ -86,9 +86,27 @@ def index_range(coords: np.ndarray, lo: float, hi: float) -> tuple[int, int]:
     return int(inside.min()), int(inside.max()) + 1
 
 
+def _join_negative_values(argv: list[str], flags: tuple[str, ...]) -> list[str]:
+    """`--bbox -74.6,10.6,...` -> `--bbox=-74.6,10.6,...`.
+
+    Antes de Python 3.14, argparse toma un valor que empieza con '-' (longitudes
+    oeste) como si fuera otra opción y falla.
+    """
+    out, i = [], 0
+    while i < len(argv):
+        if argv[i] in flags and i + 1 < len(argv):
+            out.append(f"{argv[i]}={argv[i + 1]}")
+            i += 2
+        else:
+            out.append(argv[i])
+            i += 1
+    return out
+
+
 def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")  # acentos en la consola de Windows
+        sys.stderr.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("h5", help="Archivo NISAR GCOV (.h5)")
     p.add_argument("--list", action="store_true", help="Mostrar estructura y salir")
@@ -96,7 +114,7 @@ def main() -> None:
     p.add_argument("--grid", help="Grupo de la grilla (por defecto: el primero con esa polarización)")
     p.add_argument("--bbox", help="oeste,sur,este,norte en grados WGS84")
     p.add_argument("--out", help="GeoTIFF de salida")
-    args = p.parse_args()
+    args = p.parse_args(_join_negative_values(sys.argv[1:], ("--bbox",)))
 
     with h5py.File(args.h5, "r") as f:
         if args.list:
