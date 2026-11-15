@@ -102,7 +102,7 @@ Las escenas de `web/demo/` las genera `pipeline/make_demo_data.py`: son **sinté
 
 ## Use of AI tools
 
-Parts of this repository were written with the assistance of AI coding tools. All method choices, polarization selections, thresholds and scientific interpretations were specified, reviewed and approved by the human team members named in this submission. AI-assisted components are limited to code drafting, documentation and workflow automation. No radar scene, measurement, result or figure in this project was generated, synthesised or altered by an AI tool.
+Parts of this repository were written with the assistance of AI coding tools, an AI assistant executed the project's own processing pipeline on the NISAR granules to generate the published layers, and the synthetic demonstration scenes available under `?demo=1` were generated programmatically to test the interface. The demo is labelled as invented data on every screen and contains no NISAR observation. All method choices, polarization selections, masking rules, thresholds and scientific interpretations were specified, reviewed and approved by the human team members named in this submission. No NISAR scene, measurement, result or figure presented as an observation was generated, synthesised or altered by an AI tool.
 
 ## Créditos y licencia
 
