@@ -16,6 +16,10 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 ## 1. Study area and question
 
 - 2026-11-14 · — · team — Proposed primary area: **Ciénaga Grande de Santa Marta** (Colombia). Secondary (optional): Antarctic Peninsula, drop if not ready by Sun 15:00. Final decision: #10.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Final area: Ciénaga Grande de Santa Marta**, bbox `-74.70,10.75,-74.40,10.95`. Scenes: track 119 ascending, frame 007, PROVISIONAL / CRID P05023, 2026-06-22 and 2026-10-20, dual-pol DHDH, EPSG:32618 at 10 m.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Question (final):** where did the radar signal change, and does HH vs HV tell us whether the change was at the surface or in the vegetation above it? The original "did open water expand or retreat" is contradicted by the data: water extent barely moved.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Wind hypothesis tested and REJECTED.** NASA POWER WS10M at the acquisition hours: 2.97 m/s (53°) on 22 Jun, 0.87 m/s (170°) on 20 Oct. The date with higher HH had 3.4× less wind. Caveat: MERRA-2 half-degree cell, regional average, cannot resolve local breeze. Local DIMAR-CIOH wind requested.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Second panel (Antarctica) dropped.** NISAR is single-pol (SHSH) there and cannot support the polarization comparison.
 
 ## 2. NISAR data (scenes, collections, CRIDs)
 
@@ -23,6 +27,8 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-14 · — · team — **Never compare across collections/CRIDs.** `change_detection.py` refuses to run if they differ.
 - 2026-11-14 · — · team — **Permanent instrument gap 27 Jul – 10 Aug 2026** in PROVISIONAL. Do not pick dates that straddle it.
 - 2026-11-14 · — · team — Scene log (date · collection · CRID · file) lives in `docs/DATOS.md`.
+- 2026-11-15 · #11 · Juan H. (download), Fredy (record) — **Scenes in use:** before `NISAR_L2_PR_GCOV_023_119_A_007_4005_DHDH_A_20260622T103154_20260622T103231_P05023_N_F_J_001`, after `NISAR_L2_PR_GCOV_033_119_A_007_4005_DHDH_A_20261020T103148_20261020T103229_P05023_N_F_J_001`. Both GCOV PROVISIONAL P05023, ascending track 119, frame 007, cycles 023 → 033 (120 days), dual-pol DHDH (HHHH + HVHV). Download URLs in `docs/DATOS.md` (Earthdata Login required). Never commit the `.h5` files.
+- 2026-11-15 · #12 · Fredy — Granule names and URLs found with the public ASF search API (`dataset=NISAR`, bbox + date); exactly one GCOV per date over the area. Overpass 10:31:54Z vs 10:31:48Z. CRID P05023 is part of the granule name.
 
 ## 3. HDF5 / GCOV structure
 
@@ -32,6 +38,8 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 
 - 2026-11-14 · — · Fredy — Current defaults (to approve in #15): speckle filter **boxcar 5×5 px**, change = **10·log10(after/before)** dB, significance threshold **3 dB**, web images reprojected to EPSG:3857 and averaged in linear power up to **2048 px**. Lee filter available (`--filter lee --enl 4`).
 - 2026-11-14 · — · Fredy — `--bbox` takes `west,south,east,north` in WGS84 degrees. Negative longitudes work in both scripts (argparse before Python 3.14 needed a fix).
+- 2026-11-15 · #15 · Santiago — Speckle filter: boxcar, 5×5 px (approves Fredy's default). Reason: lagoon-scale features should survive the ~100–130 m smoothing; Lee not yet tested on real NISAR data. Small channels may blur; to be checked on the first real map.
+- 2026-11-15 · #15 · Santiago — Change threshold: 3 dB, about a doubling or halving of the echo (approves Fredy's default). Reason: a commonly used rule of thumb, not yet checked against NISAR data; to be revisited after the first real map.
 - 2026-11-15 · #14 · Santiago — Sources: NASA Earthdata (n.d.), What is SAR?; Jensen et al. (2018), Remote Sensing 10(9):1431; NASA JPL NISAR mission page.
 
 ## 5. AI layer
