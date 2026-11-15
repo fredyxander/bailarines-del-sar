@@ -129,6 +129,35 @@
   .links a { font-family: var(--mono); font-size: 17px; text-decoration: none; border-bottom: 1px solid var(--hair); overflow-wrap: anywhere; }
   .next { margin-top: auto; display: flex; align-items: baseline; gap: 18px; font-size: 24px; padding-top: 22px; }
 
+
+  /* what you can do */
+  .can { display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px 34px; }
+  .can svg { width: 44px; height: 44px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; display: block; margin-bottom: 12px; }
+  .can h4 { margin: 0 0 6px; font: 700 14.5px/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+  .can p { font-size: 17.5px; line-height: 1.45; color: #ccc; }
+  .mini { display: inline-block; font: 600 10px var(--mono); letter-spacing: .12em; color: #000; background: #fff; padding: 1px 5px; vertical-align: 2px; text-transform: uppercase; }
+  .mini.dashed { background: transparent; color: var(--grey); border: 1px dashed var(--grey); }
+
+  /* dependencies */
+  .dag { position: relative; width: 1408px; height: 540px; margin-top: 8px; }
+  .dag svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .dag .edge { fill: none; stroke: rgba(255,255,255,.38); stroke-width: 1.4; }
+  .dag .edge.crit { stroke: #fff; stroke-width: 2.6; }
+  .dag .edge.dashed { stroke-dasharray: 5 5; }
+  .node { position: absolute; width: 124px; height: 100px; padding: 8px 10px; background: #0b0b0b; border: 1px solid var(--hair); display: flex; flex-direction: column; gap: 4px; }
+  .node.crit { border: 2px solid #fff; }
+  .node.stretch { border: 1px dashed var(--grey); }
+  .node .nid { font: 500 10.5px var(--mono); letter-spacing: .1em; color: var(--grey); text-transform: uppercase; white-space: nowrap; }
+  .node .nid .mini { margin-left: 4px; }
+  .node .lbl { font: 600 14px/1.25 var(--sans); }
+  .dag .time { position: absolute; top: 494px; width: 156px; text-align: center; font: 500 11.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--grey); }
+  .dag .time.gate { color: var(--amber); }
+  .dag .axis { position: absolute; left: 0; right: 0; top: 482px; border-top: 1px solid var(--hair); }
+  .dag-legend { margin-top: auto; display: flex; flex-wrap: wrap; gap: 14px 36px; align-items: center; font-size: 16px; color: #ddd; padding-top: 14px; border-top: 1px solid var(--hair); }
+  .dag-legend .ln { display: inline-block; width: 34px; height: 0; border-top: 2.6px solid #fff; vertical-align: middle; margin-right: 8px; }
+  .dag-legend .box { display: inline-block; width: 22px; height: 14px; vertical-align: middle; margin-right: 8px; }
+  .dag-legend .box.dashed { border: 1px dashed var(--grey); }
+
   /* controls */
   .ctrl { position: fixed; z-index: 10; right: 14px; top: 14px; display: flex; gap: 6px; opacity: .45; transition: opacity .2s; }
   .ctrl:hover, .ctrl:focus-within { opacity: 1; }
@@ -292,9 +321,20 @@
     <p class="note es"><b>Maquetas conceptuales</b> hechas con el diseño real del sitio sobre el mapa satelital real. Las formas y cifras son <b>ilustrativas, no son datos NISAR</b>.</p>
   </section>
 
-  <!-- 6 · AI layer -->
+  <!-- 6 · What you can do -->
   <section class="slide">
-    <p class="kicker"><span class="en">05 · To stand out</span><span class="es">05 · Para destacar</span> <span class="tag ai">AI</span></p>
+    <p class="kicker"><span class="en">05 · The platform, in plain words</span><span class="es">05 · La plataforma, en palabras sencillas</span></p>
+    <h2><span class="en">What you can do</span><span class="es">Lo que puedes hacer</span></h2>
+    <div class="can">
+      <div><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-6 6-6 28 0 34M24 7c6 6 6 28 0 34"/></svg><h4><span class="en">Pick a place</span><span class="es">Elige un lugar</span></h4><p class="en">Choose a spot on Earth, like a big lagoon in Colombia.</p><p class="es">Escoge un sitio de la Tierra, como una gran ciénaga en Colombia.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 38 30 18"/><circle cx="32" cy="16" r="4"/><path d="M38 24a14 14 0 0 0-14-14M44 24A20 20 0 0 0 24 4"/></svg><h4><span class="en">See it with radar</span><span class="es">Míralo con radar</span></h4><p class="en">See it the way the satellite does, even at night or under clouds.</p><p class="es">Míralo como lo ve el satélite, incluso de noche o con nubes.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v36"/><path d="M14 18 6 24l8 6M34 18l8 6-8 6"/></svg><h4><span class="en">Travel in time</span><span class="es">Viaja en el tiempo</span></h4><p class="en">Slide the line to jump between two dates. Press Play and watch the ground dance.</p><p class="es">Desliza la línea para saltar entre dos fechas. Pulsa Play y mira bailar el suelo.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="16" height="28" fill="#4c9bff" stroke="none"/><rect x="26" y="10" width="16" height="28" fill="#ff5a4f" stroke="none"/></svg><h4><span class="en">Spot the change</span><span class="es">Encuentra el cambio</span></h4><p class="en">Blue: the echo got weaker, maybe water arrived. Red: the echo got stronger.</p><p class="es">Azul: el eco se debilitó, quizá llegó agua. Rojo: el eco se hizo más fuerte.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 18v12M14 12v24M20 20v8"/><path d="M28 14v20M34 8v32M40 18v12"/></svg><h4><span class="en">Switch how it listens</span><span class="es">Cambia cómo escucha</span></h4><p class="en">HH is best at telling water from land. HV hears plants and branches.</p><p class="es">HH distingue mejor el agua de la tierra. HV escucha plantas y ramas.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="6" width="16" height="16" fill="#4c9bff" stroke="none"/><rect x="26" y="6" width="16" height="16" fill="#3be3a0" stroke="none"/><rect x="6" y="26" width="16" height="16" fill="#ff5a4f" stroke="none"/><rect x="26" y="26" width="16" height="16" fill="#ffc23d" stroke="none"/></svg><h4><span class="en">Know what kind of change</span><span class="es">Sabe qué tipo de cambio</span> <span class="mini">AI</span></h4><p class="en">Colors sort every change: new water, more plants, rougher ground, or not sure.</p><p class="es">Los colores ordenan cada cambio: agua nueva, más plantas, suelo más rugoso o no se sabe.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 30h36v10H6z"/><path d="M12 30v-5M18 30v-8M24 30v-5M30 30v-8M36 30v-5"/></svg><h4><span class="en">Count the water</span><span class="es">Cuenta el agua</span> <span class="mini">AI</span></h4><p class="en">Get a number: how many km² of water appeared. 1 km² is about 140 soccer fields.</p><p class="es">Obtén un número: cuántos km² de agua aparecieron. 1 km² son unas 140 canchas de fútbol.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 12c-6-4-12-4-18-2v28c6-2 12-2 18 2 6-4 12-4 18-2V10c-6-2-12-2-18 2z"/><path d="M24 12v28"/></svg><h4><span class="en">Read the story</span><span class="es">Lee la historia</span> <span class="mini">AI</span></h4><p class="en">A short explanation in English or Spanish, checked by our scientist.</p><p class="es">Una explicación corta en inglés o español, revisada por nuestro científico.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32v20H22l-8 8v-8H8z"/><path d="M20 18h.01M28 18h.01"/></svg><h4><span class="en">Ask a question</span><span class="es">Haz una pregunta</span> <span class="mini dashed"><span class="en">AI · if time</span><span class="es">IA · si hay tiempo</span></span></h4><p class="en">Type a question and get an answer that only uses this map's numbers.</p><p class="es">Escribe una pregunta y recibe una respuesta que solo usa los números de este mapa.</p></div><div><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="m15 24 6 6 12-13"/></svg><h4><span class="en">Check where it comes from</span><span class="es">Revisa de dónde viene</span></h4><p class="en">Every image shows its date and its NISAR collection. Nothing is hidden.</p><p class="es">Cada imagen muestra su fecha y su colección NISAR. Nada está oculto.</p></div>
+    </div>
+    <p class="bottomline rule en">No account, no install, no radar degree: <b>open a link, pick a place, and watch the surface move.</b></p>
+    <p class="bottomline rule es">Sin cuenta, sin instalar nada y sin saber de radares: <b>abre un enlace, elige un lugar y mira moverse la superficie.</b></p>
+  </section>
+
+  <!-- 7 · AI layer -->
+  <section class="slide">
+    <p class="kicker"><span class="en">06 · To stand out</span><span class="es">06 · Para destacar</span> <span class="tag ai">AI</span></p>
     <h2><span class="en">The AI layer</span><span class="es">La capa de IA</span></h2>
     <div class="ai-grid">
       <div>
@@ -302,7 +342,7 @@
         <h4><span class="en">Change types</span><span class="es">Tipos de cambio</span></h4>
         <p class="en">Groups every pixel by how HH and HV changed together: likely new water, more vegetation structure, rougher surface, ambiguous. Unsupervised (k-means), rules visible.</p>
         <p class="es">Agrupa cada píxel según cómo cambiaron HH y HV juntos: posible agua nueva, más estructura vegetal, superficie más rugosa, ambiguo. Sin etiquetas (k-means), con reglas visibles.</p>
-        <p class="who">Moneeb · Fredy</p>
+        <p class="who">Fredy</p>
       </div>
       <div>
         <span class="n">02</span>
@@ -338,7 +378,7 @@
 
   <!-- 7 · To build -->
   <section class="slide">
-    <p class="kicker"><span class="en">06 · Still to build for the challenge</span><span class="es">06 · Lo que falta para el reto</span> <span class="tag pending">To do</span></p>
+    <p class="kicker"><span class="en">07 · Still to build for the challenge</span><span class="es">07 · Lo que falta para el reto</span> <span class="tag pending">To do</span></p>
     <h2><span class="en">What is missing</span><span class="es">Lo que falta</span></h2>
     <div class="todo">
       <div>
@@ -361,7 +401,7 @@
       </div>
       <div>
         <h3 class="ai"><span class="en">AI layer</span><span class="es">Capa de IA</span></h3>
-        <p><i>13</i><span><span class="en">Change types: clustering on HH + HV change</span><span class="es">Tipos de cambio: agrupación con el cambio HH + HV</span></span><em>Moneeb</em></p>
+        <p><i>13</i><span><span class="en">Change types: clustering on HH + HV change</span><span class="es">Tipos de cambio: agrupación con el cambio HH + HV</span></span><em>Fredy</em></p>
         <p><i>14</i><span><span class="en">Water mask per date and km² in the HUD</span><span class="es">Máscara de agua por fecha y km² en el HUD</span></span><em>Moneeb</em></p>
         <p><i>15</i><span><span class="en">"Read the dance" summary, English + Spanish</span><span class="es">Resumen "Read the dance", inglés + español</span></span><em>Fredy</em></p>
         <p><i>16</i><span><span class="en">Review AI text and change-type rules</span><span class="es">Revisar el texto de IA y las reglas de los tipos</span></span><em>Santiago</em></p>
@@ -371,9 +411,22 @@
     </div>
   </section>
 
-  <!-- 8 · Team -->
+  <!-- 9 · Dependencies -->
   <section class="slide">
-    <p class="kicker"><span class="en">07 · Who does what</span><span class="es">07 · Quién hace qué</span></p>
+    <p class="kicker"><span class="en">08 · What waits for what</span><span class="es">08 · Qué espera a qué</span></p>
+    <h2><span class="en">Task dependencies</span><span class="es">Dependencias de tareas</span></h2>
+    <div class="dag" id="dag"></div>
+    <div class="dag-legend">
+      <span><i class="ln crit"></i><span class="en">Critical path: if one is late, the submission is late</span><span class="es">Ruta crítica: si una se atrasa, se atrasa la entrega</span></span>
+      <span><span class="mini">AI</span> <span class="en">AI layer</span><span class="es">Capa de IA</span></span>
+      <span><i class="box dashed"></i><span class="en">If time allows</span><span class="es">Si queda tiempo</span></span>
+      <span class="muted"><span class="en">Tasks 13–16 can start today on the synthetic demo.</span><span class="es">Las tareas 13–16 pueden empezar hoy con el demo sintético.</span></span>
+    </div>
+  </section>
+
+  <!-- 10 · Team -->
+  <section class="slide">
+    <p class="kicker"><span class="en">09 · Who does what</span><span class="es">09 · Quién hace qué</span></p>
     <h2><span class="en">Team tasks</span><span class="es">Tareas del equipo</span></h2>
     <table class="team">
       <thead><tr><th><span class="en">Member</span><span class="es">Integrante</span></th><th><span class="en">Task</span><span class="es">Tarea</span></th><th><span class="en">Deliverable</span><span class="es">Entregable</span></th><th><span class="en">Due · Bogotá</span><span class="es">Límite · Bogotá</span></th></tr></thead>
@@ -387,7 +440,7 @@
           <td><span class="en">Files + collection, CRID, date in</span><span class="es">Archivos + colección, CRID y fecha en</span> <span class="mono">docs/DATOS.md</span></td>
           <td><span class="en">As soon as possible</span><span class="es">Lo antes posible</span></td></tr>
         <tr><td>Fredy Chaparro<span class="en">Architecture · front · back</span><span class="es">Arquitectura · front · back</span></td>
-          <td><span class="en">Run the pipeline on real data; keep app, tests and repo healthy.</span><span class="es">Correr el pipeline con datos reales; mantener app, pruebas y repo.</span> <span class="aiw"><span class="en">Integrate the AI layer; chat if time.</span><span class="es">Integrar la capa de IA; chat si hay tiempo.</span></span></td>
+          <td><span class="en">Run the pipeline on real data; keep app, tests and repo healthy.</span><span class="es">Correr el pipeline con datos reales; mantener app, pruebas y repo.</span> <span class="aiw"><span class="en">Change types (k-means), AI integration; chat if time.</span><span class="es">Tipos de cambio (k-means), integración de IA; chat si hay tiempo.</span></span></td>
           <td><span class="en">Real layers live; AI views in the app</span><span class="es">Capas reales publicadas; vistas de IA en la app</span></td>
           <td><span class="en">Sun 10:00 · AI 15:00</span><span class="es">Dom 10:00 · IA 15:00</span></td></tr>
         <tr><td>Santiago Calderón<span class="en">Science validation</span><span class="es">Validación científica</span></td>
@@ -399,8 +452,8 @@
           <td><span class="en">7 slides, public link</span><span class="es">7 diapositivas, enlace público</span></td>
           <td><span class="en">Sun 18:00</span><span class="es">Dom 18:00</span></td></tr>
         <tr><td>Moneeb Hussain<span class="en">Signals · software · Pakistan</span><span class="es">Señales · software · Pakistán</span></td>
-          <td><span class="en">Check polarizations; test links from Pakistan; night shift.</span><span class="es">Verificar polarizaciones; probar enlaces desde Pakistán; turno nocturno.</span> <span class="aiw"><span class="en">Change types + water mask.</span><span class="es">Tipos de cambio + máscara de agua.</span></span></td>
-          <td><span class="en">Polarization check, clean-device test, AI model</span><span class="es">Revisión de polarización, prueba limpia, modelo de IA</span></td>
+          <td><span class="en">Check polarizations; test links from Pakistan; night shift.</span><span class="es">Verificar polarizaciones; probar enlaces desde Pakistán; turno nocturno.</span> <span class="aiw"><span class="en">Water mask in km².</span><span class="es">Máscara de agua en km².</span></span></td>
+          <td><span class="en">Polarization check, clean-device test, water mask</span><span class="es">Revisión de polarización, prueba limpia, máscara de agua</span></td>
           <td><span class="en">AI 15:00 · test 18:00</span><span class="es">IA 15:00 · prueba 18:00</span></td></tr>
       </tbody>
     </table>
@@ -408,7 +461,7 @@
 
   <!-- 9 · Workflow -->
   <section class="slide">
-    <p class="kicker"><span class="en">08 · How we work</span><span class="es">08 · Cómo trabajamos</span></p>
+    <p class="kicker"><span class="en">10 · How we work</span><span class="es">10 · Cómo trabajamos</span></p>
     <h2><span class="en">From task to live site</span><span class="es">De la tarea al sitio publicado</span></h2>
     <div class="flow">
       <div><b>Issue</b><p class="en">Each task becomes a GitHub issue with an owner</p><p class="es">Cada tarea es un issue de GitHub con responsable</p></div>
@@ -432,7 +485,7 @@
 
   <!-- 10 · Links -->
   <section class="slide">
-    <p class="kicker"><span class="en">09 · Important links</span><span class="es">09 · Enlaces importantes</span></p>
+    <p class="kicker"><span class="en">11 · Important links</span><span class="es">11 · Enlaces importantes</span></p>
     <h2><span class="en">Where everything lives</span><span class="es">Dónde está todo</span></h2>
     <div class="links">
       <p><b><span class="en">Live app</span><span class="es">App publicada</span></b><a href="https://fredyxander.github.io/bailarines-del-sar/">fredyxander.github.io/bailarines-del-sar</a></p>
@@ -444,8 +497,8 @@
       <p><b><span class="en">NISAR data</span><span class="es">Datos NISAR</span></b><a href="https://search.asf.alaska.edu/">search.asf.alaska.edu</a> · <a href="https://nisar-docs.asf.alaska.edu/">nisar-docs.asf.alaska.edu</a></p>
       <p><b><span class="en">Reference documents</span><span class="es">Documentos de referencia</span></b><a href="https://github.com/fredyxander/bailarines-del-sar/tree/main/base%20reference">base reference/</a></p>
     </div>
-    <p class="next rule en"><span class="tag pending">Next</span>Approve this briefing → turn slide 7 into GitHub issues, one per task, with an owner.</p>
-    <p class="next rule es"><span class="tag pending">Siguiente</span>Aprobar esta presentación → convertir la diapositiva 7 en issues de GitHub, uno por tarea, con responsable.</p>
+    <p class="next rule en"><span class="tag pending">Next</span>Approve this briefing → turn slide 8 into GitHub issues, one per task, with an owner.</p>
+    <p class="next rule es"><span class="tag pending">Siguiente</span>Aprobar esta presentación → convertir la diapositiva 8 en issues de GitHub, uno por tarea, con responsable.</p>
   </section>
 </main>
 
@@ -499,6 +552,83 @@
     document.getElementById('next').onclick = () => show(i + 1);
     document.getElementById('lang-en').onclick = () => setLang('en');
     document.getElementById('lang-es').onclick = () => setLang('es');
+
+    // ---- Task dependency graph (slide "Task dependencies") ----
+    (function drawDag() {
+      const dag = document.getElementById('dag');
+      if (!dag) return;
+      const W = 124, H = 100, COLW = 1408 / 9, ROWS = [0, 152, 304];
+      const T = {
+        '01': ['A', 0, 'Juan H.', 'Confirm area + question', 'Confirmar zona y pregunta', 'crit'],
+        '02': ['B', 0, 'Tinjacá', 'Download 2 GCOV scenes', 'Descargar 2 escenas GCOV', 'crit'],
+        '03': ['C', 0, 'Tinjacá', 'Log date · collection · CRID', 'Registrar fecha · colección · CRID', 'crit'],
+        '04': ['C', 1, 'Moneeb', 'Check polarizations', 'Verificar polarizaciones'],
+        '06': ['C', 2, 'Santiago', 'Approve method values', 'Aprobar valores del método'],
+        '11': ['A', 2, 'Juan H.', 'Decide name + demo', 'Decidir nombre y demo'],
+        '07': ['D', 0, 'Fredy', 'Pipeline on real scenes', 'Pipeline con escenas reales', 'crit'],
+        '05': ['E', 0, 'Santiago', 'Physical drivers', 'Causas físicas', 'crit'],
+        '13': ['E', 1, 'Fredy', 'Change types (k‑means)', 'Tipos de cambio (k‑means)', 'ai'],
+        '14': ['E', 2, 'Moneeb', 'Water mask km²', 'Máscara de agua km²', 'ai'],
+        '08': ['F', 0, 'Fredy', 'Drivers + wording in app', 'Causas y textos en la app', 'crit'],
+        '15': ['F', 1, 'Fredy', 'Summary EN / ES', 'Resumen EN / ES', 'ai'],
+        '09': ['G', 0, 'Daira', '7 demo slides', '7 diapositivas de demo', 'crit'],
+        '16': ['G', 1, 'Santiago', 'Review AI text', 'Revisar texto de IA', 'ai'],
+        '18': ['G', 2, 'Fredy', 'Chat', 'Chat', 'stretch'],
+        '10': ['H', 0, 'Moneeb', 'Test links, clean device', 'Probar enlaces, equipo limpio', 'crit'],
+        '17': ['H', 1, 'Juan H.', 'AI declaration', 'Declaración de IA', 'ai'],
+        '12': ['I', 0, 'Juan H.', 'Form + submit', 'Formulario y envío', 'crit'],
+      };
+      const E = [
+        ['01', '02', 'crit'], ['02', '03', 'crit'], ['02', '04'], ['03', '07', 'crit'], ['04', '07'], ['06', '07'],
+        ['07', '05', 'crit'], ['07', '13'], ['07', '14'], ['05', '08', 'crit'], ['05', '15'], ['13', '15'], ['14', '15'],
+        ['08', '09', 'crit'], ['15', '16'], ['15', '18', 'dashed'], ['16', '17'], ['09', '10', 'crit'],
+        ['10', '12', 'crit'], ['17', '12'], ['11', '12', 'lane'],
+      ];
+      const pos = (id) => {
+        const [col, row] = T[id];
+        const c = col.charCodeAt(0) - 65;
+        return { x: c * COLW + (COLW - W) / 2, y: ROWS[row] };
+      };
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg');
+      svg.innerHTML = '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#fff"/></marker></defs>';
+      for (const [a, b, kind] of E) {
+        const p = pos(a), q = pos(b);
+        const x1 = p.x + W, y1 = p.y + H / 2, x2 = q.x - 2, y2 = q.y + H / 2;
+        let d;
+        if (kind === 'lane') {
+          const lane = ROWS[2] + H + 26;
+          d = `M${x1} ${y1} C${x1 + 18} ${y1}, ${x1 + 18} ${lane}, ${x1 + 36} ${lane} L${x2 - 36} ${lane} C${x2 - 18} ${lane}, ${x2 - 18} ${y2}, ${x2} ${y2}`;
+        } else {
+          const mx = (x1 + x2) / 2;
+          d = `M${x1} ${y1} C${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+        }
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'edge' + (kind === 'crit' ? ' crit' : '') + (kind === 'dashed' ? ' dashed' : ''));
+        path.setAttribute('marker-end', 'url(#ah)');
+        svg.appendChild(path);
+      }
+      dag.appendChild(svg);
+      for (const [id, [, , who, en, es, kind]] of Object.entries(T)) {
+        const { x, y } = pos(id);
+        const n = document.createElement('div');
+        n.className = 'node' + (kind === 'crit' ? ' crit' : '') + (kind === 'stretch' ? ' stretch' : '');
+        n.style.left = x + 'px'; n.style.top = y + 'px';
+        const tag = kind === 'ai' ? '<span class="mini">AI</span>' : kind === 'stretch' ? '<span class="mini dashed">AI</span>' : '';
+        n.innerHTML = `<span class="nid">${id} · ${who}${tag}</span><span class="lbl"><span class="en">${en}</span><span class="es">${es}</span></span>`;
+        dag.appendChild(n);
+      }
+      const axis = document.createElement('div'); axis.className = 'axis'; dag.appendChild(axis);
+      const times = { A: ['Now', 'Ya'], B: ['ASAP', 'Pronto'], D: ['Sun 10:00', 'Dom 10:00'], F: ['Sun 15:00 · AI gate', 'Dom 15:00 · corte IA', 'gate'], G: ['Sun 18:00', 'Dom 18:00'], I: ['Sun 22:00', 'Dom 22:00'] };
+      for (const [col, [en, es, cls]] of Object.entries(times)) {
+        const t = document.createElement('div');
+        t.className = 'time' + (cls ? ' ' + cls : '');
+        t.style.left = (col.charCodeAt(0) - 65) * COLW + 'px';
+        t.innerHTML = `<span class="en">${en}</span><span class="es">${es}</span>`;
+        dag.appendChild(t);
+      }
+    })();
     setLang(lang); fit(); show(i);
   })();
 </script>
