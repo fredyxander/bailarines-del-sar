@@ -249,6 +249,8 @@
     });
     state.meta = meta;
     $('site-title').textContent = state.site.name;
+    $('question').textContent = state.site.question || '';
+    $('question').hidden = !state.site.question;
     $('empty').hidden = true;
     document.body.classList.remove('is-empty');
     const b = meta.bounds_wgs84;
@@ -287,14 +289,37 @@
     const s = meta.stats;
     $('stats').hidden = false;
     $('thr').textContent = s.threshold_db;
-    $('s-dec').textContent = s.pct_decrease.toFixed(1) + '%';
-    $('s-inc').textContent = s.pct_increase.toFixed(1) + '%';
-    $('s-med').textContent = (s.median_change_db > 0 ? '+' : '') + s.median_change_db.toFixed(2) + ' dB';
+    renderCompare().catch(() => {});
     const lim = meta.display.change_limit_db;
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
     setMode(state.mode);
     hint();
+  }
+
+  // Mission panel: HH vs HV side by side, active channel highlighted
+  const metaCache = {};
+  function getMeta(site, pol) {
+    const url = `${LAYERS}/${encodeURIComponent(site)}/${encodeURIComponent(pol)}/meta.json`;
+    if (!metaCache[url]) {
+      metaCache[url] = fetch(url, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : Promise.reject(r.status)));
+    }
+    return metaCache[url];
+  }
+  async function renderCompare() {
+    const tbl = $('cmp');
+    const pols = state.site.polarizations;
+    const metas = await Promise.all(pols.map((p) => getMeta(state.site.id, p).catch(() => null)));
+    const signed = (v) => (v > 0 ? '+' : '') + v.toFixed(2) + ' dB';
+    pols.forEach((p, i) => {
+      const m = metas[i];
+      if (!m) return;
+      const cell = (k) => tbl.querySelector(`tr[data-k="${k}"] td[data-pol="${p}"]`);
+      if (cell('inc')) cell('inc').textContent = m.stats.pct_increase.toFixed(1) + '%';
+      if (cell('dec')) cell('dec').textContent = m.stats.pct_decrease.toFixed(1) + '%';
+      if (cell('med')) cell('med').textContent = signed(m.stats.median_change_db);
+    });
+    tbl.querySelectorAll('[data-pol]').forEach((el) => el.classList.toggle('on', el.dataset.pol === state.pol));
   }
 
   function showEmpty() {
@@ -315,6 +340,9 @@
     loadLayer(true).catch(() => showEmpty());
   };
 
+  document.querySelectorAll('a[href="#how"]').forEach((a) => a.addEventListener('click', () => { $('how').open = true; }));
+  // Tall desktop screens have room: open "How to read it" by default.
+  if (innerHeight >= 900 && innerWidth > 720) $('how').open = true;
   buildTimeline();
   fetch(`${LAYERS}/index.json`, { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
