@@ -41,7 +41,7 @@ This session covered the live app, map tiles, NISAR imagery, the before/after vi
 | Change types view displayed | PASS | [03-change-types.jpg](03-change-types.jpg) shows that mode open, with the color overlay and the class legend |
 | Why it changed text visible | PASS | The lead line is visible in the first two screenshots. The third shows the expanded notes. EN/ES switching was not tested |
 | Read the dance | PASS | Tester opened it and confirmed it worked |
-| Ask the radar | PASS | Tester confirmed it worked |
+| Ask the radar | PASS | Tester confirmed it worked. [04-ask-the-radar.jpg](04-ask-the-radar.jpg) shows the panel open with a guided answer |
 | GitHub repository without login | PASS | Tester opened https://github.com/fredyxander/bailarines-del-sar in the browser and confirmed it loads |
 | Slide deck without login | PASS | Tester opened https://claude.ai/artifact/EktQp2aSXLJ8MWzp4pdskn and confirmed the slides display |
 
@@ -56,8 +56,7 @@ The images are the original captures. They show only the public app. No account,
 | [01-two-dates-hh.jpg](01-two-dates-hh.jpg) | Two dates, HH selected, radar over the basemap, slider, **Pause**, T+ 120 days, mission panel |
 | [02-what-changed-hv.jpg](02-what-changed-hv.jpg) | What changed, HV selected, red/blue overlay, opacity slider, Play the dance (not running) |
 | [03-change-types.jpg](03-change-types.jpg) | Change types view, class legend, and the expanded Why it changed notes |
-
-Three images were supplied with the test notes. The request text said two.
+| [04-ask-the-radar.jpg](04-ask-the-radar.jpg) | Ask the radar open on What changed, HV selected, with a guided answer on screen |
 
 ## Remaining checks
 
