@@ -48,6 +48,19 @@
         <a class="btn" href="#how">How to read it</a>
       </div>
 
+      <div id="read" class="read-card" role="region" aria-label="Read the dance" hidden>
+        <div class="read-head">
+          <p class="kicker">Read the dance <span class="ai-tag">AI</span></p>
+          <div class="why-langs read-langs" role="group" aria-label="Language">
+            <button type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-lang="es" aria-pressed="false">ES</button>
+          </div>
+          <button type="button" class="read-close" id="read-close" aria-label="Close">×</button>
+        </div>
+        <p class="read-text" id="read-text"></p>
+        <p class="read-foot" id="read-foot"></p>
+      </div>
+
       <div class="hud">
         <div class="hud-controls">
           <label class="ctl"><span class="label">Area</span><select id="site" class="site-select"></select></label>
@@ -60,6 +73,9 @@
           </div>
           <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
             <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
+          </button>
+          <button id="read-btn" class="btn read-btn" type="button" aria-expanded="false" aria-controls="read" hidden>
+            <span class="ai-tag" aria-hidden="true">AI</span>Read the dance
           </button>
         </div>
 

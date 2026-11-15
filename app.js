@@ -291,6 +291,7 @@
     $('thr').textContent = s.threshold_db;
     renderCompare().catch(() => {});
     loadWhy();
+    loadSummary();
     const lim = meta.display.change_limit_db;
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
@@ -324,6 +325,34 @@
     renderWhy();
   }
   document.querySelectorAll('#why .why-langs button').forEach((b) => b.addEventListener('click', () => { whyLang = b.dataset.lang; renderWhy(); }));
+
+  // "Read the dance": AI-drafted plain-language summary in layers/<site>/summary.json
+  let summary = null, readLang = 'en';
+  function renderRead() {
+    $('read-btn').hidden = !summary;
+    if (!summary) { $('read').hidden = true; return; }
+    $('read-text').textContent = summary[readLang] || summary.en;
+    const reviewed = summary.reviewed_by
+      ? (readLang === 'es' ? `revisado por ${summary.reviewed_by}` : `reviewed by ${summary.reviewed_by}`)
+      : (readLang === 'es' ? 'pendiente de revisión del equipo' : 'awaiting team review');
+    $('read-foot').textContent = readLang === 'es'
+      ? `Redactado por un modelo de IA (${summary.model}) solo con los números de esta página · ${reviewed}`
+      : `Drafted by an AI model (${summary.model}) from the numbers on this page only · ${reviewed}`;
+    document.querySelectorAll('#read .read-langs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === readLang));
+  }
+  async function loadSummary() {
+    summary = !state.site.summary ? null : await fetch(`${LAYERS}/${encodeURIComponent(state.site.id)}/summary.json`, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    renderRead();
+  }
+  function toggleRead(open) {
+    $('read').hidden = !open;
+    $('read-btn').setAttribute('aria-expanded', String(open));
+    $('read-btn').setAttribute('aria-pressed', String(open));
+  }
+  $('read-btn').addEventListener('click', () => toggleRead($('read').hidden));
+  $('read-close').addEventListener('click', () => toggleRead(false));
+  document.querySelectorAll('#read .read-langs button').forEach((b) => b.addEventListener('click', () => { readLang = b.dataset.lang; renderRead(); }));
 
   async function renderCompare() {
     const tbl = $('cmp');

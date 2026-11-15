@@ -242,6 +242,19 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 .why-note { color: var(--grey) !important; }
 .why-src { margin-top: 8px !important; font: 400 10px/1.45 var(--mono) !important; color: var(--grey-2) !important; }
 
+.ai-tag { display: inline-block; margin-right: 8px; padding: 1px 5px; font: 700 9.5px var(--mono); letter-spacing: .12em; color: #000; background: var(--white); vertical-align: 1px; }
+.kicker .ai-tag { margin: 0 0 0 6px; }
+.hud .btn.read-btn { padding: 10px 16px; }
+.btn.read-btn[aria-pressed="true"] .ai-tag, .btn.read-btn:hover .ai-tag { color: var(--white); background: #000; }
+.read-card { position: absolute; z-index: 1050; left: var(--pad); top: calc(var(--banner) + 150px); width: min(460px, calc(100% - 2 * var(--pad))); padding: 14px 18px 12px; background: rgba(0, 0, 0, .84); backdrop-filter: blur(6px); border: 1px solid var(--hair); }
+.read-head { display: flex; align-items: center; gap: 16px; }
+.read-head .kicker { margin: 0; color: var(--white); }
+.read-langs { margin: 0 0 0 auto; }
+.read-close { background: none; border: 0; color: var(--grey); font: 400 22px/1 var(--sans); cursor: pointer; padding: 0 2px; }
+.read-close:hover { color: var(--white); }
+.read-text { margin: 10px 0 10px; font: 400 15.5px/1.55 var(--sans); color: #ececec; }
+.read-foot { margin: 0; font: 500 10px/1.45 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--grey); }
+
 /* Archive timeline */
 .timeline { position: relative; height: 72px; margin-top: 40px; border-top: 1px solid var(--hair); overflow-x: clip; }
 .tl-seg { position: absolute; top: 14px; height: 6px; }
@@ -299,6 +312,7 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
   .results { margin-top: 0; height: auto; min-height: 0; padding: 18px 16px 24px; border-left: 0; border-top: 1px solid var(--hair); }
   .map-wrap { position: relative; inset: auto; margin-top: var(--banner); height: 64svh; min-height: 380px; }
   .map-col::after { display: none; }
+  .read-card { position: static; width: auto; margin: 0 16px 8px; }
   .date-tag { top: 70px; }
   .leaflet-top.leaflet-right { top: 64px; transform: none; }
   .overture { position: static; padding: 28px 16px 36px; }
