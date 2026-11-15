@@ -39,15 +39,16 @@
   map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   map.attributionControl.addAttribution('NISAR: NASA/JPL-Caltech &amp; ISRO via ASF');
 
-  for (const [name, z] of [['before', 410], ['after', 420], ['change', 430]]) {
+  for (const [name, z] of [['before', 410], ['after', 420], ['change', 430], ['types', 440]]) {
     map.createPane(name).style.zIndex = z;
   }
   const afterPane = map.getPane('after');
 
   // ---- State ----------------------------------------------------------------
   const params = new URLSearchParams(location.search);
-  const state = { index: null, site: null, pol: null, mode: params.get('mode') === 'change' ? 'change' : 'swipe', pct: 0.5, meta: null };
-  const overlays = { before: null, after: null, change: null };
+  const MODES = ['swipe', 'change', 'types'];
+  const state = { index: null, site: null, pol: null, mode: MODES.includes(params.get('mode')) ? params.get('mode') : 'swipe', pct: 0.5, meta: null, types: null };
+  const overlays = { before: null, after: null, change: null, types: null };
 
   // ---- Archive timeline -------------------------------------------------------
   const T0 = Date.UTC(2025, 9, 1), T1 = Date.UTC(2026, 11, 15);
@@ -184,19 +185,22 @@
 
   // ---- Rendering --------------------------------------------------------------
   function setMode(mode) {
+    if (mode === 'types' && state.meta && !overlays.types) mode = 'swipe';
     state.mode = mode;
-    document.body.classList.toggle('mode-change', mode === 'change');
+    document.body.classList.toggle('mode-change', mode !== 'swipe');
+    document.body.classList.toggle('mode-types', mode === 'types');
     if (mode !== 'swipe') stop();
     $('play').hidden = !state.meta;
-    $('mode-swipe').setAttribute('aria-pressed', mode === 'swipe');
-    $('mode-change').setAttribute('aria-pressed', mode === 'change');
+    for (const m of MODES) $('mode-' + m).setAttribute('aria-pressed', mode === m);
     wrap.classList.toggle('hidden-swipe', mode !== 'swipe' || !state.meta);
-    $('opacity-row').hidden = mode !== 'change' || !state.meta;
+    $('opacity-row').hidden = mode === 'swipe' || !state.meta;
     $('legend').hidden = mode !== 'change' || !state.meta;
+    $('types-legend').hidden = mode !== 'types' || !state.meta;
     if (state.meta) {
       toggle(overlays.before, mode === 'swipe');
       toggle(overlays.after, mode === 'swipe');
       toggle(overlays.change, mode === 'change');
+      toggle(overlays.types, mode === 'types');
     }
     updateClip();
     syncUrl();
@@ -259,6 +263,7 @@
     overlays.before = L.imageOverlay(`${base}/before.png`, bounds, { pane: 'before', alt: `Radar, ${meta.before.date}` });
     overlays.after = L.imageOverlay(`${base}/after.png`, bounds, { pane: 'after', alt: `Radar, ${meta.after.date}` });
     overlays.change = L.imageOverlay(`${base}/change.png`, bounds, { pane: 'change', alt: 'Radar echo change', opacity: $('opacity').value / 100 });
+    await loadTypes();
     if (fit) map.fitBounds(bounds, { padding: [24, 24] });
 
     $('date-left').textContent = fmtDate(meta.before.date);
@@ -308,6 +313,35 @@
     }
     return metaCache[url];
   }
+  // "Change types · AI": k-means groups of (ΔHH, ΔHV) named by rules, in layers/<site>/types.json + types.png
+  const typesCache = {};
+  async function loadTypes() {
+    const site = state.site;
+    overlays.types = null;
+    if (site.types && !(site.id in typesCache)) {
+      typesCache[site.id] = await fetch(`${LAYERS}/${encodeURIComponent(site.id)}/types.json`, { cache: 'no-cache' })
+        .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    }
+    state.types = site.types ? typesCache[site.id] : null;
+    $('mode-types').hidden = !state.types;
+    if (!state.types) return;
+    const b = state.types.bounds_wgs84;
+    overlays.types = L.imageOverlay(`${LAYERS}/${encodeURIComponent(site.id)}/types.png`, [[b.south, b.west], [b.north, b.east]],
+      { pane: 'types', alt: 'Change types (AI clustering)', opacity: $('opacity').value / 100 });
+    $('types-items').replaceChildren(...state.types.classes.filter((c) => c.color).map((c) => {
+      const li = document.createElement('li');
+      li.title = c.label_en;
+      const sw = document.createElement('i'); sw.style.background = c.color;
+      const name = document.createElement('span'); name.textContent = c.short_en || c.label_en;
+      const pct = document.createElement('b'); pct.textContent = c.pct.toFixed(1) + '%';
+      li.append(sw, name, pct);
+      return li;
+    }));
+    $('types-note').title = `k-means, k=${state.types.k}, seed ${state.types.seed}, on standardised ΔHH, ΔHV and HH before (dB). ` +
+      `Each group is named by rules on its centre (±${state.types.threshold_db} dB, water below ${state.types.water_threshold_db} dB). ` +
+      'Labels are interpretations of a radar change, not ground truth.';
+  }
+
   // "Why it changed": per-site text in layers/<site>/why.json (hidden if absent, e.g. the demo)
   let whyData = null, whyLang = 'en';
   function renderWhy() {
@@ -386,13 +420,16 @@
     $('empty').hidden = false;
     document.body.classList.add('is-empty');
     wrap.classList.add('hidden-swipe');
-    for (const id of ['site', 'mode-swipe', 'mode-change']) $(id).disabled = true;
+    for (const id of ['site', 'mode-swipe', 'mode-change', 'mode-types']) $(id).disabled = true;
   }
 
   // ---- Wiring -------------------------------------------------------------------
   $('mode-swipe').onclick = () => setMode('swipe');
   $('mode-change').onclick = () => setMode('change');
-  $('opacity').oninput = (e) => overlays.change && overlays.change.setOpacity(e.target.value / 100);
+  $('mode-types').onclick = () => setMode('types');
+  $('opacity').oninput = (e) => {
+    for (const k of ['change', 'types']) if (overlays[k]) overlays[k].setOpacity(e.target.value / 100);
+  };
   $('site').onchange = (e) => {
     state.site = state.index.sites.find((s) => s.id === e.target.value);
     if (!state.site.polarizations.includes(state.pol)) state.pol = state.site.polarizations[0];
