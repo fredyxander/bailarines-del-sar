@@ -6,8 +6,9 @@ Builds the facts of one site — the same facts as "Read the dance"
 
   * writes them to web/layers/<site>/facts.json: the only context given to
     the experimental in-browser model, and the list of allowed numbers;
-  * checks web/layers/<site>/ask.json (questions + answers, EN/ES): every
-    number must exist in the facts, otherwise the script fails.
+  * checks web/layers/<site>/ask.json (questions + answers, EN/ES, plus the
+    paraphrases in "also" used to match a free question): every number must
+    exist in the facts, otherwise the script fails.
 
     python pipeline/ask.py --site cienaga           # write facts.json + check ask.json
     python pipeline/ask.py --site cienaga --check   # only check (CI)
@@ -65,6 +66,11 @@ def check_answers(ask: dict, allowed: set[str]) -> list[str]:
     """Problems found in ask.json: numbers that are not in the facts, empty or missing texts."""
     problems = []
     for q in ask["questions"]:
+        for lang, texts in (q.get("also") or {}).items():
+            for text in texts:
+                bad = unknown_numbers(text, allowed)
+                if bad:
+                    problems.append(f"{q['id']}.also.{lang}: numbers not in the facts {bad} in '{text}'")
         for lang in ("en", "es"):
             item = q.get(lang) or {}
             for part in ("q", "a"):

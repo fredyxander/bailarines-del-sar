@@ -91,6 +91,10 @@ def main() -> None:
                 expect(page.locator("#ask-foot")).to_contain_text("AI")
                 page.click("#ask .ask-langs button[data-lang=es]")
                 expect(page.locator("#ask-foot")).to_contain_text("IA")
+                # Experimental free question: present and explained; the model is not downloaded in CI.
+                expect(page.locator("#ask-input")).to_be_visible()
+                expect(page.locator("#ask-free-note")).to_contain_text("MiniLM")
+                expect(page.locator("#ask .exp-tag")).to_be_visible()
                 page.click("#read-btn")
                 expect(page.locator("#ask")).to_be_hidden()
                 page.click("#read-close")
