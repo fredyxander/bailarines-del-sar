@@ -22,7 +22,7 @@
   <a class="wordmark" href="./">Surface&nbsp;Dance</a>
   <span class="nav-meta">NISAR · L-band radar</span>
   <nav class="nav-links">
-    <a href="#details">Mission details</a>
+    <a href="#details">Mission results</a>
     <a href="#how">How to read it</a>
     <a href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Source ↗</a>
   </nav>
@@ -30,91 +30,89 @@
 
 <main>
   <section class="hero">
-    <div class="map-wrap">
-      <div id="map" aria-label="Map"></div>
-      <div id="swipe-handle" class="swipe-handle" role="slider" tabindex="0"
-           aria-label="Slide between the two dates" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-        <span class="knob" aria-hidden="true"><i>‹</i><i>›</i></span>
-      </div>
-      <div id="date-left" class="date-tag left"></div>
-      <div id="date-right" class="date-tag right"></div>
-    </div>
-
-    <div id="empty" class="overture" hidden>
-      <p class="kicker">Awaiting first light</p>
-      <h1>The stage<br>is set</h1>
-      <p class="lede">Radar scenes for our study areas are on their way. When they land, this map becomes a duet between two dates — seen through cloud, night and snow.</p>
-      <a class="btn" href="#how">How to read it</a>
-    </div>
-
-    <div class="hud">
-      <div class="hud-controls">
-        <label class="ctl"><span class="label">Area</span><select id="site" class="site-select"></select></label>
-        <div class="ctl"><span class="label">Channel</span><div id="pol" class="tabs" role="radiogroup" aria-label="Polarization"></div></div>
-        <div class="ctl"><span class="label">View</span>
-          <div class="tabs" role="group" aria-label="View">
-            <button id="mode-swipe" aria-pressed="true">Two dates</button>
-            <button id="mode-change" aria-pressed="false">What changed</button>
-          </div>
+    <div class="map-col">
+      <div class="map-wrap">
+        <div id="map" aria-label="Map"></div>
+        <div id="swipe-handle" class="swipe-handle" role="slider" tabindex="0"
+             aria-label="Slide between the two dates" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <span class="knob" aria-hidden="true"><i>‹</i><i>›</i></span>
         </div>
-        <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
-          <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
-        </button>
+        <div id="date-left" class="date-tag left"></div>
+        <div id="date-right" class="date-tag right"></div>
       </div>
 
-      <div class="hud-bar">
-      <div class="gauge fade">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-dec-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
-        <div class="g-read"><span class="g-label">Faded</span><b id="g-dec">—</b><span class="g-unit">% of area</span></div>
+      <div id="empty" class="overture" hidden>
+        <p class="kicker">Awaiting first light</p>
+        <h1>The stage<br>is set</h1>
+        <p class="lede">Radar scenes for our study areas are on their way. When they land, this map becomes a duet between two dates — seen through cloud, night and snow.</p>
+        <a class="btn" href="#how">How to read it</a>
       </div>
-        <div class="hud-center">
-          <div class="track" aria-hidden="true">
-            <span class="ms before"><em>Before</em><i></i><small id="ms-before"></small></span>
-            <span class="ms after"><em>After</em><i></i><small id="ms-after"></small></span>
-            <span id="hud-cursor" class="cursor"></span>
-          </div>
-          <div class="clock" aria-label="Days between the two scenes"><span class="tplus">T+</span><span id="hud-days">000</span><span class="dunit">days</span></div>
-          <p class="mission"><span id="site-title"></span><span id="hud-meta"></span></p>
-          <div class="hud-legend">
-            <div id="legend" class="legend" hidden>
-              <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
+
+      <div class="hud">
+        <div class="hud-controls">
+          <label class="ctl"><span class="label">Area</span><select id="site" class="site-select"></select></label>
+          <div class="ctl"><span class="label">Channel</span><div id="pol" class="tabs" role="radiogroup" aria-label="Polarization"></div></div>
+          <div class="ctl"><span class="label">View</span>
+            <div class="tabs" role="group" aria-label="View">
+              <button id="mode-swipe" aria-pressed="true">Two dates</button>
+              <button id="mode-change" aria-pressed="false">What changed</button>
             </div>
-            <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
-              <input id="opacity" type="range" min="0" max="100" value="85">
-            </label>
           </div>
+          <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
+            <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
+          </button>
         </div>
-      <div class="gauge grow">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-inc-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
-        <div class="g-read"><span class="g-label">Grew</span><b id="g-inc">—</b><span class="g-unit">% of area</span></div>
-      </div>
-      </div>
-    </div>
-    <a class="scroll-cue" href="#details">Mission details <span aria-hidden="true">↓</span></a>
-  </section>
 
-  <section id="details" class="details">
-    <div class="row">
-      <h2>What changed</h2>
-      <div>
-        <div id="stats" hidden>
-          <div class="figures">
-            <p><b id="s-dec"></b><span>of the area faded<br>smoother or wetter surface</span></p>
-            <p><b id="s-inc"></b><span>of the area grew<br>rougher surface or more structure</span></p>
+        <div class="hud-bar">
+        <div class="gauge fade">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-dec-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
+          <div class="g-read"><span class="g-label">Faded</span><b id="g-dec">—</b><span class="g-unit">% of area</span></div>
+        </div>
+          <div class="hud-center">
+            <div class="track" aria-hidden="true">
+              <span class="ms before"><em>Before</em><i></i><small id="ms-before"></small></span>
+              <span class="ms after"><em>After</em><i></i><small id="ms-after"></small></span>
+              <span id="hud-cursor" class="cursor"></span>
+            </div>
+            <div class="clock" aria-label="Days between the two scenes"><span class="tplus">T+</span><span id="hud-days">000</span><span class="dunit">days</span></div>
+            <p class="mission"><span id="site-title"></span><span id="hud-meta"></span></p>
+            <div class="hud-legend">
+              <div id="legend" class="legend" hidden>
+                <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
+              </div>
+              <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
+                <input id="opacity" type="range" min="0" max="100" value="85">
+              </label>
+            </div>
           </div>
-          <p class="fine">Change of at least <span id="thr"></span> dB · median shift <span id="s-med"></span></p>
+        <div class="gauge grow">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-inc-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
+          <div class="g-read"><span class="g-label">Grew</span><b id="g-inc">—</b><span class="g-unit">% of area</span></div>
+        </div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <h2>Channel</h2>
-      <div class="prose"><p id="pol-note"></p></div>
-    </div>
+    <aside class="results" id="details" aria-label="Mission results">
+      <p class="kicker">Mission results</p>
+      <p id="question" class="question" hidden></p>
 
-    <div class="row">
-      <h2>The two dates</h2>
-      <div>
+      <section class="m-block" id="stats" hidden>
+        <h2>What changed <span class="m-sub">≥ <span id="thr">3</span> dB</span></h2>
+        <table class="cmp" id="cmp">
+          <thead><tr><th></th><th data-pol="HHHH">HH</th><th data-pol="HVHV">HV</th></tr></thead>
+          <tbody>
+            <tr data-k="inc"><th><i class="dot grow"></i>Echo grew</th><td data-pol="HHHH">—</td><td data-pol="HVHV">—</td></tr>
+            <tr data-k="dec"><th><i class="dot fade"></i>Echo faded</th><td data-pol="HHHH">—</td><td data-pol="HVHV">—</td></tr>
+            <tr data-k="med"><th>Median shift</th><td data-pol="HHHH">—</td><td data-pol="HVHV">—</td></tr>
+          </tbody>
+        </table>
+        <p class="m-note"><span class="m-label">Channel</span> <span id="pol-note"></span></p>
+        <dl id="processing" class="spec-inline"></dl>
+      </section>
+
+      <section class="m-block">
+        <h2>The two dates</h2>
         <table class="spec" id="scenes">
           <thead><tr><th></th><th class="c-before">Before</th><th class="c-after">After</th></tr></thead>
           <tbody>
@@ -123,33 +121,25 @@
             <tr><th>CRID</th><td>—</td><td>—</td></tr>
           </tbody>
         </table>
-        <p id="files" class="fine mono"></p>
-        <dl id="processing" class="spec-list"></dl>
-      </div>
-    </div>
+        <p id="files" class="m-files"></p>
+      </section>
 
-    <div class="row">
-      <h2>Mission archive</h2>
-      <div>
-        <p class="fine">NISAR public collections. We only compare dates inside one collection — what moves must be the ground, not the processing.</p>
-        <div id="timeline" class="timeline"></div>
-      </div>
-    </div>
+      <details class="m-block how" id="how">
+        <summary><h2>How to read it · data archive</h2></summary>
+        <div class="prose">
+          <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, tree crowns and broken ice scatter it back and look bright.</p>
+          <p>A change in that echo is a change in roughness or moisture. Flooding, harvest or ice movement are <em>interpretations</em> of it, and we label them that way.</p>
+          <p>NISAR flies at 747&nbsp;km and revisits every 12 days with a 24&nbsp;cm L-band radar, so it sees day and night, through cloud and smoke.</p>
+          <h3 class="m-h3">Mission archive <span class="m-sub">we only compare dates inside one collection</span></h3>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </details>
 
-    <div class="row" id="how">
-      <h2>How to read it</h2>
-      <div class="prose">
-        <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, tree crowns and broken ice scatter it back and look bright.</p>
-        <p>A change in that echo is a change in roughness or moisture. Flooding, harvest or ice movement are <em>interpretations</em> of it, and we label them that way.</p>
-        <p>NISAR flies at 747&nbsp;km and revisits every 12 days with a 24&nbsp;cm L-band radar, so it sees day and night, through cloud and smoke.</p>
-      </div>
-    </div>
-
-    <footer class="colophon">
-      <span class="wordmark small">Surface&nbsp;Dance</span>
-      <p>Los Bailarines del SAR · NASA Space Apps Challenge 2026 · Bogotá · MIT licence</p>
-      <p>NISAR data: NASA/JPL-Caltech &amp; ISRO, distributed by the Alaska Satellite Facility. Not endorsed by NASA.</p>
-    </footer>
+      <footer class="colophon">
+        <p><b>Surface Dance</b> · Los Bailarines del SAR · NASA Space Apps Challenge 2026 · MIT licence</p>
+        <p>NISAR data: NASA/JPL-Caltech &amp; ISRO via the Alaska Satellite Facility. Not endorsed by NASA.</p>
+      </footer>
+    </aside>
   </section>
 </main>
 
