@@ -22,9 +22,7 @@ Repository: https://github.com/fredyxander/bailarines-del-sar
 
 ## Scope
 
-This session covered the live app, map tiles, NISAR imagery, the before/after view, HH and HV, What changed, Play while it was running, the mission panel, Read the dance, Ask the radar, and the public GitHub repository.
-
-The slide deck was not opened. That is the remaining check.
+This session covered the live app, map tiles, NISAR imagery, the before/after view, HH and HV, What changed, Play while it was running, the mission panel, Read the dance, Ask the radar, the public GitHub repository, and the slide deck.
 
 ## Results
 
@@ -45,7 +43,7 @@ The slide deck was not opened. That is the remaining check.
 | Read the dance | PASS | Tester opened it and confirmed it worked |
 | Ask the radar | PASS | Tester confirmed it worked |
 | GitHub repository without login | PASS | Tester opened https://github.com/fredyxander/bailarines-del-sar in the browser and confirmed it loads |
-| Slide deck without login | NOT VERIFIED | Not opened |
+| Slide deck without login | PASS | Tester opened https://claude.ai/artifact/EktQp2aSXLJ8MWzp4pdskn and confirmed the slides display |
 
 No broken control was seen in the checks marked PASS.
 
@@ -63,10 +61,8 @@ Three images were supplied with the test notes. The request text said two.
 
 ## Remaining checks
 
-This is still required before #19 can be closed:
-
-- Open the slide deck from #18 and confirm it does not ask for a login. Record the exact URL.
+None of the checks in this report are still open.
 
 ## Verdict
 
-The desktop checks passed: live app in Chrome on Windows, the map and radar views, Read the dance, Ask the radar, and the public GitHub repository. This does **not** finish #19. The slide deck is still unverified.
+The desktop checks passed in Chrome on Windows: the live app, the map and radar views, Read the dance, Ask the radar, the public GitHub repository, and the slide deck at https://claude.ai/artifact/EktQp2aSXLJ8MWzp4pdskn.
