@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surface Dance — NISAR change explorer</title>
+<meta name="description" content="Two dates, one surface: explore Earth's surface change read by NISAR L-band radar. Los Bailarines del SAR, NASA Space Apps Challenge 2026.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="demo-banner" class="demo-banner" role="status" hidden>
+  <b>Synthetic demo</b><span>Invented test scenes · not NISAR data · no real change</span><a href="./">Exit demo</a>
+</div>
+
+<header class="nav">
+  <a class="wordmark" href="./">Surface&nbsp;Dance</a>
+  <span class="nav-meta">NISAR · L-band radar</span>
+  <nav class="nav-links">
+    <a href="#details">Mission details</a>
+    <a href="#how">How to read it</a>
+    <a href="https://github.com/fredyxander/bailarines-del-sar" target="_blank" rel="noopener">Source ↗</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="map-wrap">
+      <div id="map" aria-label="Map"></div>
+      <div id="swipe-handle" class="swipe-handle" role="slider" tabindex="0"
+           aria-label="Slide between the two dates" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <span class="knob" aria-hidden="true"><i>‹</i><i>›</i></span>
+      </div>
+      <div id="date-left" class="date-tag left"></div>
+      <div id="date-right" class="date-tag right"></div>
+    </div>
+
+    <div id="empty" class="overture" hidden>
+      <p class="kicker">Awaiting first light</p>
+      <h1>The stage<br>is set</h1>
+      <p class="lede">Radar scenes for our study areas are on their way. When they land, this map becomes a duet between two dates — seen through cloud, night and snow.</p>
+      <a class="btn" href="#how">How to read it</a>
+    </div>
+
+    <div class="hero-ui">
+      <div class="title-block">
+        <div class="site-pick">
+          <label class="kicker" for="site">Study area</label>
+          <select id="site" class="site-select"></select>
+        </div>
+        <h1 id="site-title" class="site-title"></h1>
+        <p id="hero-dates" class="hero-dates"></p>
+      </div>
+
+      <div class="controls">
+        <div id="legend" class="legend" hidden>
+          <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
+          <em>faded · grew (dB)</em>
+        </div>
+        <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
+          <input id="opacity" type="range" min="0" max="100" value="85">
+        </label>
+        <div class="control-row">
+          <div class="group">
+            <span class="label">Channel</span>
+            <div id="pol" class="tabs" role="radiogroup" aria-label="Polarization"></div>
+          </div>
+          <div class="group">
+            <span class="label">View</span>
+            <div class="tabs" role="group" aria-label="View">
+              <button id="mode-swipe" aria-pressed="true">Two dates</button>
+              <button id="mode-change" aria-pressed="false">What changed</button>
+            </div>
+          </div>
+          <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
+            <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
+          </button>
+        </div>
+        <p id="pol-note" class="pol-note"></p>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#details">Mission details <span aria-hidden="true">↓</span></a>
+  </section>
+
+  <section id="details" class="details">
+    <div class="row">
+      <h2>What changed</h2>
+      <div>
+        <div id="stats" hidden>
+          <div class="figures">
+            <p><b id="s-dec"></b><span>of the area faded<br>smoother or wetter surface</span></p>
+            <p><b id="s-inc"></b><span>of the area grew<br>rougher surface or more structure</span></p>
+          </div>
+          <p class="fine">Change of at least <span id="thr"></span> dB · median shift <span id="s-med"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <h2>The two dates</h2>
+      <div>
+        <table class="spec" id="scenes">
+          <thead><tr><th></th><th class="c-before">Before</th><th class="c-after">After</th></tr></thead>
+          <tbody>
+            <tr><th>Date</th><td>—</td><td>—</td></tr>
+            <tr><th>Collection</th><td>—</td><td>—</td></tr>
+            <tr><th>CRID</th><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p id="files" class="fine mono"></p>
+        <dl id="processing" class="spec-list"></dl>
+      </div>
+    </div>
+
+    <div class="row">
+      <h2>Mission archive</h2>
+      <div>
+        <p class="fine">NISAR public collections. We only compare dates inside one collection — what moves must be the ground, not the processing.</p>
+        <div id="timeline" class="timeline"></div>
+      </div>
+    </div>
+
+    <div class="row" id="how">
+      <h2>How to read it</h2>
+      <div class="prose">
+        <p>Radar measures how strongly the ground sends its pulse back. Water mirrors it away and looks dark; rough ground, tree crowns and broken ice scatter it back and look bright.</p>
+        <p>A change in that echo is a change in roughness or moisture. Flooding, harvest or ice movement are <em>interpretations</em> of it, and we label them that way.</p>
+        <p>NISAR flies at 747&nbsp;km and revisits every 12 days with a 24&nbsp;cm L-band radar, so it sees day and night, through cloud and smoke.</p>
+      </div>
+    </div>
+
+    <footer class="colophon">
+      <span class="wordmark small">Surface&nbsp;Dance</span>
+      <p>Los Bailarines del SAR · NASA Space Apps Challenge 2026 · Bogotá · MIT licence</p>
+      <p>NISAR data: NASA/JPL-Caltech &amp; ISRO, distributed by the Alaska Satellite Facility. Not endorsed by NASA.</p>
+    </footer>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
