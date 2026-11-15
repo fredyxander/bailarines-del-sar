@@ -62,13 +62,13 @@ def main() -> None:
         expect(page.locator("#demo-banner")).to_be_visible()
         expect(page.locator(".date-tag.left")).to_have_text("20 Jun 2026", timeout=10000)
         expect(page.locator("#empty")).to_be_hidden()
-        assert page.locator(".leaflet-image-layer").count() >= 1, "no se cargó ninguna capa"
         print("ok  demo: aviso visible y capas cargadas")
 
-        # Vista inicial: "What changed"
-        expect(page.locator("#legend")).to_be_visible()
-        expect(page.locator("#mode-change")).to_have_attribute("aria-pressed", "true")
-        print("ok  la vista inicial es 'What changed'")
+        # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
+        expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")
+        expect(page.locator("#swipe-handle")).to_be_visible()
+        assert page.locator(".leaflet-image-layer").count() >= 2, "faltan capas antes/después"
+        print("ok  la vista inicial es 'Two dates' con la línea visible")
 
         # Play: la línea se mueve sola; Pause la detiene
         handle = page.locator("#swipe-handle")
