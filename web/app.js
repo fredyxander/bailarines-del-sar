@@ -24,7 +24,8 @@
     .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
   // ---- Map & basemaps -------------------------------------------------------
-  const map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([8, -60], 3);
+  const map = L.map('map', { zoomControl: false, worldCopyJump: true }).setView([12, -60], 3);
+  L.control.zoom({ position: 'topright' }).addTo(map);
   const basemaps = {
     'Satellite': L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -33,8 +34,8 @@
       { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }),
   };
   basemaps['Satellite'].addTo(map);
-  L.control.layers(basemaps, null, { position: 'bottomleft' }).addTo(map);
-  L.control.scale({ imperial: false, position: 'bottomright' }).addTo(map);
+  L.control.layers(basemaps, null, { position: 'topright' }).addTo(map);
+  L.control.scale({ imperial: false, position: 'topright' }).addTo(map);
   map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
   map.attributionControl.addAttribution('NISAR: NASA/JPL-Caltech &amp; ISRO via ASF');
 
@@ -129,9 +130,61 @@
   });
   map.on('move zoom resize viewreset zoomend moveend', updateClip);
 
+  // ---- Play: the line sways between the two dates on its own --------------------
+  const AMP = 0.45, PERIOD = 5000;
+  let raf = null;
+  function play() {
+    if (state.mode !== 'swipe') setMode('swipe');
+    const start = performance.now();
+    const phase = Math.asin(Math.max(-1, Math.min(1, (state.pct - 0.5) / AMP)));
+    const step = (now) => {
+      state.pct = 0.5 + AMP * Math.sin(phase + (2 * Math.PI * (now - start)) / PERIOD);
+      updateClip();
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    setPlayButton(true);
+  }
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    setPlayButton(false);
+  }
+  function setPlayButton(on) {
+    const b = $('play');
+    b.setAttribute('aria-pressed', on);
+    b.querySelector('.play-icon').textContent = on ? '❚❚' : '▶';
+    b.querySelector('.play-label').textContent = on ? 'Pause' : 'Play the dance';
+  }
+  $('play').onclick = () => (raf ? stop() : play());
+
+  // First load: a short sway shows that the line can be moved. Any touch stops it.
+  let hinted = false;
+  function hint() {
+    if (hinted || state.mode !== 'swipe' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    hinted = true;
+    const start = performance.now(), DUR = 2200;
+    const step = (now) => {
+      const t = now - start;
+      if (raf || t > DUR) { if (!raf) { state.pct = 0.5; updateClip(); } return; }
+      state.pct = 0.5 + 0.16 * Math.sin((2 * Math.PI * t) / 1100) * (1 - t / DUR);
+      updateClip();
+      hintRaf = requestAnimationFrame(step);
+    };
+    hintRaf = requestAnimationFrame(step);
+  }
+  let hintRaf = null;
+  const cancelHint = () => { if (hintRaf) cancelAnimationFrame(hintRaf); hintRaf = null; };
+  handle.addEventListener('pointerdown', cancelHint);
+  handle.addEventListener('keydown', cancelHint, true);
+  handle.addEventListener('pointerdown', stop);
+  handle.addEventListener('keydown', stop, true);
+
   // ---- Rendering --------------------------------------------------------------
   function setMode(mode) {
     state.mode = mode;
+    if (mode !== 'swipe') stop();
+    $('play').hidden = !state.meta;
     $('mode-swipe').setAttribute('aria-pressed', mode === 'swipe');
     $('mode-change').setAttribute('aria-pressed', mode === 'change');
     wrap.classList.toggle('hidden-swipe', mode !== 'swipe' || !state.meta);
@@ -192,7 +245,9 @@
       return r.json();
     });
     state.meta = meta;
+    $('site-title').textContent = state.site.name;
     $('empty').hidden = true;
+    document.body.classList.remove('is-empty');
     const b = meta.bounds_wgs84;
     const bounds = [[b.south, b.west], [b.north, b.east]];
     for (const k of Object.keys(overlays)) { if (overlays[k]) overlays[k].remove(); }
@@ -203,6 +258,10 @@
 
     $('date-left').textContent = fmtDate(meta.before.date);
     $('date-right').textContent = fmtDate(meta.after.date);
+    $('hero-dates').innerHTML = '';
+    const hb = document.createElement('span'); hb.className = 'b'; hb.textContent = fmtDate(meta.before.date);
+    const ha = document.createElement('span'); ha.className = 'a'; ha.textContent = fmtDate(meta.after.date);
+    $('hero-dates').append(hb, ' → ', ha, ` · ${meta.after.collection} ${meta.after.crid}`);
     renderScenes(meta);
     markTimeline(meta);
 
@@ -226,10 +285,12 @@
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
     setMode(state.mode);
+    hint();
   }
 
   function showEmpty() {
     $('empty').hidden = false;
+    document.body.classList.add('is-empty');
     wrap.classList.add('hidden-swipe');
     for (const id of ['site', 'mode-swipe', 'mode-change']) $(id).disabled = true;
   }

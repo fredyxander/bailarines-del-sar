@@ -62,10 +62,29 @@ def main() -> None:
         expect(page.locator("#demo-banner")).to_be_visible()
         expect(page.locator(".date-tag.left")).to_have_text("20 Jun 2026", timeout=10000)
         expect(page.locator("#empty")).to_be_hidden()
-        assert page.locator(".leaflet-image-layer").count() >= 2, "faltan capas antes/después"
         print("ok  demo: aviso visible y capas cargadas")
 
+        # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
+        expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")
+        expect(page.locator("#swipe-handle")).to_be_visible()
+        assert page.locator(".leaflet-image-layer").count() >= 2, "faltan capas antes/después"
+        print("ok  la vista inicial es 'Two dates' con la línea visible")
+
+        # Play: la línea se mueve sola; Pause la detiene
         handle = page.locator("#swipe-handle")
+        page.click("#play")
+        expect(handle).to_be_visible()
+        pos = lambda: float(handle.evaluate("e => e.style.left").rstrip("%"))
+        page.wait_for_timeout(400); a1 = pos()
+        page.wait_for_timeout(700); a2 = pos()
+        assert abs(a2 - a1) > 3, f"Play no mueve la línea ({a1} -> {a2})"
+        page.click("#play")
+        expect(page.locator("#play")).to_have_attribute("aria-pressed", "false")
+        p1 = pos(); page.wait_for_timeout(500)
+        assert pos() == p1, "Pause no detiene la línea"
+        print("ok  Play mueve la línea sola y Pause la detiene")
+        assert page.locator(".leaflet-image-layer").count() >= 2, "faltan capas antes/después en Two dates"
+
         box = page.locator(".knob").bounding_box()
         wrap = page.locator(".map-wrap").bounding_box()
         page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
