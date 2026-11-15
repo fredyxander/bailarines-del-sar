@@ -297,6 +297,7 @@
     renderCompare().catch(() => {});
     loadWhy();
     loadSummary();
+    loadAsk();
     const lim = meta.display.change_limit_db;
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
@@ -379,14 +380,53 @@
       .then((r) => (r.ok ? r.json() : null)).catch(() => null);
     renderRead();
   }
-  function toggleRead(open) {
-    $('read').hidden = !open;
-    $('read-btn').setAttribute('aria-expanded', String(open));
-    $('read-btn').setAttribute('aria-pressed', String(open));
+  // One AI card open at a time: "Read the dance" or "Ask the radar"
+  function toggleCard(id, open) {
+    for (const k of ['read', 'ask']) {
+      const on = k === id && open;
+      $(k).hidden = !on;
+      $(k + '-btn').setAttribute('aria-expanded', String(on));
+      $(k + '-btn').setAttribute('aria-pressed', String(on));
+    }
   }
+  const toggleRead = (open) => toggleCard('read', open);
   $('read-btn').addEventListener('click', () => toggleRead($('read').hidden));
   $('read-close').addEventListener('click', () => toggleRead(false));
   document.querySelectorAll('#read .read-langs button').forEach((b) => b.addEventListener('click', () => { readLang = b.dataset.lang; renderRead(); }));
+
+  // "Ask the radar": guided questions with answers drafted only from this page's numbers (layers/<site>/ask.json)
+  let ask = null, askLang = 'en', askSel = null;
+  function renderAsk() {
+    $('ask-btn').hidden = !ask;
+    if (!ask) { $('ask').hidden = true; return; }
+    if (!ask.questions.some((q) => q.id === askSel)) askSel = ask.questions[0].id;
+    $('ask-qs').replaceChildren(...ask.questions.map((q) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ask-q';
+      b.textContent = (q[askLang] || q.en).q;
+      b.setAttribute('aria-pressed', String(q.id === askSel));
+      b.onclick = () => { askSel = q.id; renderAsk(); };
+      return b;
+    }));
+    const cur = ask.questions.find((q) => q.id === askSel);
+    $('ask-answer').textContent = (cur[askLang] || cur.en).a;
+    const reviewed = ask.reviewed_by
+      ? (askLang === 'es' ? `revisado por ${ask.reviewed_by}` : `reviewed by ${ask.reviewed_by}`)
+      : (askLang === 'es' ? 'pendiente de revisión del equipo' : 'awaiting team review');
+    $('ask-foot').textContent = askLang === 'es'
+      ? `Respuestas redactadas por un modelo de IA (${ask.model}) solo con los números de esta página · ${reviewed}`
+      : `Answers drafted by an AI model (${ask.model}) from this page's numbers only · ${reviewed}`;
+    document.querySelectorAll('#ask .ask-langs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === askLang));
+  }
+  async function loadAsk() {
+    ask = !state.site.ask ? null : await fetch(`${LAYERS}/${encodeURIComponent(state.site.id)}/ask.json`, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    renderAsk();
+  }
+  $('ask-btn').addEventListener('click', () => toggleCard('ask', $('ask').hidden));
+  $('ask-close').addEventListener('click', () => toggleCard('ask', false));
+  document.querySelectorAll('#ask .ask-langs button').forEach((b) => b.addEventListener('click', () => { askLang = b.dataset.lang; renderAsk(); }));
 
   async function renderCompare() {
     const tbl = $('cmp');

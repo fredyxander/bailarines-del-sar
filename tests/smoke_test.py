@@ -81,6 +81,20 @@ def main() -> None:
                 page.click("#mode-swipe")
                 expect(page.locator("#types-legend")).to_be_hidden()
                 print("ok  'Change types · AI': capa, leyenda con % y aviso de interpretación")
+            if (WEB / "layers" / page.locator("#site").input_value() / "ask.json").exists():
+                page.click("#ask-btn")
+                expect(page.locator("#ask")).to_be_visible()
+                assert page.locator("#ask .ask-q").count() >= 3, "faltan preguntas guiadas"
+                page.locator("#ask .ask-q").nth(1).click()
+                expect(page.locator("#ask .ask-q").nth(1)).to_have_attribute("aria-pressed", "true")
+                expect(page.locator("#ask-answer")).not_to_be_empty()
+                expect(page.locator("#ask-foot")).to_contain_text("AI")
+                page.click("#ask .ask-langs button[data-lang=es]")
+                expect(page.locator("#ask-foot")).to_contain_text("IA")
+                page.click("#read-btn")
+                expect(page.locator("#ask")).to_be_hidden()
+                page.click("#read-close")
+                print("ok  'Ask the radar': preguntas, respuesta, EN/ES, etiqueta de IA, una tarjeta a la vez")
 
         # 2. Modo demo
         page.goto(base + "/?demo=1&pol=HHHH", wait_until="load")
@@ -102,6 +116,7 @@ def main() -> None:
         expect(page.locator("#read-btn")).to_be_hidden()
         print("ok  'Read the dance' oculto en el demo (no tiene resumen)")
         expect(page.locator("#mode-types")).to_be_hidden()
+        expect(page.locator("#ask-btn")).to_be_hidden()
         print("ok  'Change types' oculto en el demo (no tiene types.json)")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista

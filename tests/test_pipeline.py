@@ -7,6 +7,7 @@
 4. Reglas de seguridad: colecciones/CRID distintos y fechas invertidas fallan.
 5. Máscara de agua HHHH: área conocida en la grilla UTM, nodata, CRS y HVHV.
 6. Tipos de cambio (k-means + reglas): cada zona sintética recibe su etiqueta.
+7. "Ask the radar": números inventados se detectan y el ask.json publicado pasa el chequeo.
 """
 
 from __future__ import annotations
@@ -294,6 +295,27 @@ def test_change_types() -> None:
           f"({pct['water_surface']:.1f} / {pct['grew_hv']:.1f} / {pct['faded_both']:.1f} %)")
 
 
+def test_ask_guard() -> None:
+    """'Ask the radar': answers may only use numbers from the page facts."""
+    from pipeline.ask import check_answers
+    from pipeline.summarize import allowed_numbers
+
+    facts = {"open_water": "329 km² → 344 km² (+4.4%)", "radar": "revisits every 12 days"}
+    allowed = allowed_numbers(facts)
+    good = {"questions": [{"id": "g", "en": {"q": "Did it grow?", "a": "From 329 to 344 km² (+4.4%)."},
+                           "es": {"q": "¿Creció?", "a": "De 329 a 344 km² (+4,4 %)."}}]}
+    bad = {"questions": [{"id": "b", "en": {"q": "Will it flood?", "a": "Yes, 35% more by 2027."},
+                          "es": {"q": "", "a": "Sí."}}]}
+    assert check_answers(good, allowed) == [], check_answers(good, allowed)
+    problems = check_answers(bad, allowed)
+    assert any("35" in p and "2027" in p for p in problems) and any("empty" in p for p in problems), problems
+    layers = ROOT / "web" / "layers"
+    for site in json.loads((layers / "index.json").read_text(encoding="utf-8"))["sites"]:
+        if site.get("ask"):
+            run(str(PIPE / "ask.py"), "--site", site["id"], "--layers", str(layers), "--check")
+    print("ok  'Ask the radar': números inventados detectados y ask.json publicado verificado")
+
+
 def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
     yy, xx = np.mgrid[0:N, 0:N]
     water = (xx - 300) ** 2 + (yy - 300) ** 2 < radius ** 2
@@ -310,6 +332,7 @@ def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
 def main() -> None:
     test_water_library()
     test_summary_guard()
+    test_ask_guard()
     rng = np.random.default_rng(7)
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
