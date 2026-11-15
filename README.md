@@ -18,6 +18,11 @@ Una aplicación web interactiva que muestra **cómo cambia la superficie de la T
 Resumen de lo construido, lo que falta, tareas por integrante, flujo de trabajo y enlaces:
 **https://fredyxander.github.io/bailarines-del-sar/presentation/** (inglés / español con el selector EN · ES; PDF: [inglés](docs/team-briefing.pdf) · [español](docs/team-briefing-es.pdf)). Documentos de referencia del equipo en [`base reference/`](base%20reference/).
 
+## Tareas y notas técnicas
+
+- Tareas del equipo: [issues #10–#27](https://github.com/fredyxander/bailarines-del-sar/issues?q=is%3Aissue+milestone%3A%22Space+Apps+submission%22), con responsable, checklist y dependencias.
+- Decisiones y hallazgos compartidos: [`tech_notes.md`](tech_notes.md). Léelo antes de empezar un issue y agrega ahí lo que otros necesiten saber.
+
 ## Estructura
 
 | Carpeta | Contenido |
