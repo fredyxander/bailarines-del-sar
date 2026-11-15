@@ -16,6 +16,10 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 ## 1. Study area and question
 
 - 2026-11-14 · — · team — Proposed primary area: **Ciénaga Grande de Santa Marta** (Colombia). Secondary (optional): Antarctic Peninsula, drop if not ready by Sun 15:00. Final decision: #10.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Final area: Ciénaga Grande de Santa Marta**, bbox `-74.70,10.75,-74.40,10.95`. Scenes: track 119 ascending, frame 007, PROVISIONAL / CRID P05023, 2026-06-22 and 2026-10-20, dual-pol DHDH, EPSG:32618 at 10 m.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Question (final):** where did the radar signal change, and does HH vs HV tell us whether the change was at the surface or in the vegetation above it? The original "did open water expand or retreat" is contradicted by the data: water extent barely moved.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Wind hypothesis tested and REJECTED.** NASA POWER WS10M at the acquisition hours: 2.97 m/s (53°) on 22 Jun, 0.87 m/s (170°) on 20 Oct. The date with higher HH had 3.4× less wind. Caveat: MERRA-2 half-degree cell, regional average, cannot resolve local breeze. Local DIMAR-CIOH wind requested.
+- 2026-11-15 · fredyxander/bailarines-del-sar#10 · Juan H. — **Second panel (Antarctica) dropped.** NISAR is single-pol (SHSH) there and cannot support the polarization comparison.
 
 ## 2. NISAR data (scenes, collections, CRIDs)
 
