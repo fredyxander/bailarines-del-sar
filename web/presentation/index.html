@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surface Dance — Team briefing</title>
+<meta name="description" content="Team briefing for Los Bailarines del SAR: what we built, what we will build for the NISAR challenge, who does what, and how we work.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --black: #000; --white: #fff; --grey: #a3a3a3; --grey-2: #6b6b6b; --hair: rgba(255,255,255,.18);
+    --magenta: #ff4fa3; --green: #3be3a0; --fade: #4c9bff; --grow: #ff5a4f; --amber: #ffc23d;
+    --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #050505; color: var(--white); font: 400 22px/1.5 var(--sans); }
+  .deck { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+  .slide { position: absolute; width: 1600px; height: 900px; padding: 72px 96px 64px; background: var(--black); overflow: hidden; display: none; flex-direction: column; transform-origin: center center; }
+  .slide.active { display: flex; }
+  .slide::after { content: attr(data-n) " / 9"; position: absolute; right: 96px; bottom: 30px; font: 500 13px var(--mono); letter-spacing: .2em; color: var(--grey-2); }
+  .slide::before { content: "SURFACE DANCE · TEAM BRIEFING"; position: absolute; left: 96px; bottom: 30px; font: 500 13px var(--mono); letter-spacing: .22em; color: var(--grey-2); }
+  .kicker { margin: 0 0 14px; font: 500 15px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--grey); }
+  h1, h2 { margin: 0; font-weight: 800; font-stretch: 112%; text-transform: uppercase; letter-spacing: -.005em; }
+  h1 { font-size: 112px; line-height: .92; }
+  h2 { font-size: 54px; line-height: 1; margin-bottom: 36px; }
+  p { margin: 0; }
+  .mono { font-family: var(--mono); }
+  .muted { color: var(--grey); }
+  a { color: inherit; }
+  .m { color: var(--magenta); } .g { color: var(--green); } .b { color: var(--fade); } .r { color: var(--grow); }
+  .rule { border-top: 1px solid var(--hair); }
+  .cols { display: grid; gap: 56px; }
+  .tag { display: inline-block; font: 500 12px var(--mono); letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--hair); color: var(--grey); vertical-align: middle; }
+  .tag.live { color: #000; background: var(--green); border-color: var(--green); }
+  .tag.pending { color: #000; background: var(--amber); border-color: var(--amber); }
+
+  /* 1 · cover */
+  .cover { padding: 0; }
+  .cover img { position: absolute; inset: -60px 0 0 0; width: 100%; height: calc(100% + 60px); object-fit: cover; object-position: center 60px; opacity: .45; filter: blur(2px); }
+  .cover .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.65) 45%, rgba(0,0,0,.1) 100%); }
+  .cover .inner { position: relative; padding: 96px; display: flex; flex-direction: column; height: 100%; }
+  .cover h1 { margin-top: auto; }
+  .cover .lede { margin-top: 28px; max-width: 760px; font-size: 26px; color: #ddd; }
+  .cover .meta { margin-top: 44px; display: flex; gap: 48px; font: 500 15px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+  .cover .meta span { color: var(--grey); display: block; font-size: 12px; letter-spacing: .24em; margin-bottom: 6px; }
+  .cover::before, .cover::after { z-index: 2; }
+
+  /* 2 · challenge */
+  .gates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: auto; }
+  .gates div { border-top: 2px solid var(--white); padding-top: 18px; }
+  .gates b { display: block; font: 700 15px var(--sans); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 8px; }
+  .gates p { font-size: 19px; color: #ccc; }
+  .asks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 64px; font-size: 23px; }
+  .asks p::before { content: "→ "; color: var(--grey-2); }
+
+  /* 3 · simple explanation */
+  .pics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; margin-top: 8px; }
+  .pics svg { width: 100%; height: 220px; display: block; margin-bottom: 18px; }
+  .pics b { display: block; font: 700 15px var(--sans); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 8px; }
+  .pics p { font-size: 19.5px; color: #ccc; }
+  .bottomline { margin-top: auto; padding-top: 22px; font-size: 24px; }
+
+  /* 4 · built */
+  .built { grid-template-columns: 1.15fr 1fr; align-items: start; }
+  .built img { width: 100%; display: block; border: 1px solid var(--hair); }
+  .list { display: grid; gap: 15px; font-size: 20px; }
+  .list p { padding-bottom: 13px; border-bottom: 1px solid var(--hair); color: #ddd; }
+  .list b { color: var(--white); font-weight: 700; }
+
+  /* 5 · final */
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; display: block; border: 1px solid var(--hair); }
+  .shots figcaption { margin-top: 14px; font-size: 19px; color: #ccc; }
+  .shots figcaption b { display: block; font: 700 14px var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
+  .note { margin-top: auto; padding: 14px 18px; border-left: 3px solid var(--amber); font-size: 19px; color: #ddd; }
+
+  /* 6 · to build */
+  .todo { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .todo p { display: grid; grid-template-columns: 34px 1fr auto; gap: 14px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--hair); font-size: 20px; }
+  .todo i { font: 500 14px var(--mono); color: var(--grey-2); font-style: normal; }
+  .todo em { font: 500 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--grey); font-style: normal; white-space: nowrap; }
+  .todo h3 { margin: 0 0 6px; font: 700 14px var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--grey); }
+
+  /* 7 · team */
+  table.team { width: 100%; border-collapse: collapse; font-size: 18.5px; }
+  .team th { text-align: left; font: 500 12.5px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--grey); padding: 0 16px 12px 0; border-bottom: 1px solid var(--white); }
+  .team td { padding: 13px 16px 13px 0; border-bottom: 1px solid var(--hair); vertical-align: top; color: #ddd; }
+  .team td:first-child { width: 250px; color: var(--white); font-weight: 700; }
+  .team td:first-child span { display: block; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--grey); font-weight: 400; margin-top: 3px; }
+  .team td:last-child { width: 150px; font: 500 14px var(--mono); color: var(--grey); white-space: nowrap; }
+
+  /* 8 · workflow */
+  .flow { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); margin: 30px 0 8px; }
+  .flow::before { content: ""; position: absolute; left: 8%; right: 8%; top: 9px; height: 1px; background: rgba(255,255,255,.55); }
+  .flow div { position: relative; text-align: center; padding: 0 10px; }
+  .flow div::before { content: ""; display: block; width: 18px; height: 18px; margin: 0 auto 18px; border-radius: 50%; border: 2px solid var(--white); background: #000; }
+  .flow div.on::before { background: var(--white); box-shadow: 0 0 0 6px rgba(255,255,255,.15), 0 0 18px #fff; }
+  .flow b { display: block; font: 700 15px var(--sans); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 8px; }
+  .flow p { font-size: 17.5px; color: #bbb; }
+  .pipe { margin-top: 110px; }
+  .pipe .steps { display: flex; flex-wrap: nowrap; align-items: center; gap: 12px; font: 500 15px var(--mono); white-space: nowrap; }
+  .pipe .steps span { padding: 8px 12px; border: 1px solid var(--hair); }
+  .pipe .steps i { color: var(--grey-2); font-style: normal; }
+
+  /* 9 · links */
+  .links { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .links p { padding: 12px 0; border-bottom: 1px solid var(--hair); font-size: 19px; }
+  .links b { display: block; font: 700 13px var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--grey); margin-bottom: 2px; }
+  .links a { font-family: var(--mono); font-size: 17px; text-decoration: none; border-bottom: 1px solid var(--hair); overflow-wrap: anywhere; }
+  .next { margin-top: auto; display: flex; align-items: baseline; gap: 18px; font-size: 24px; }
+
+  /* nav */
+  .nav { position: fixed; z-index: 10; right: 14px; top: 14px; display: flex; gap: 6px; opacity: .35; transition: opacity .2s; }
+  .nav:hover { opacity: 1; }
+  .nav button { width: 42px; height: 42px; background: rgba(0,0,0,.6); color: #fff; border: 1px solid rgba(255,255,255,.3); font: 18px var(--sans); cursor: pointer; }
+  .nav button:hover { background: #fff; color: #000; }
+  .hint { display: none; position: fixed; z-index: 10; left: 18px; bottom: 22px; font: 500 12px var(--mono); letter-spacing: .14em; color: #555; text-transform: uppercase; }
+
+  @media print {
+    @page { size: 1600px 900px; margin: 0; }
+    html, body { height: auto; background: #000; }
+    .deck { position: static; display: block; }
+    .slide { position: relative; display: flex !important; transform: none !important; page-break-after: always; break-after: page; }
+    .nav, .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+
+  <!-- 1 · Cover -->
+  <section class="slide cover active" data-n="1">
+    <img src="img/demo-two-dates.jpg" alt="">
+    <div class="shade"></div>
+    <div class="inner">
+      <p class="kicker">Los Bailarines del SAR · NASA Space Apps Challenge 2026</p>
+      <h1>Surface<br>Dance</h1>
+      <p class="lede">An open, interactive explorer that shows how Earth's surface moved between two dates, read by NISAR radar through cloud, night and snow.</p>
+      <div class="meta">
+        <p><span>Challenge</span>Dancing with the SARs</p>
+        <p><span>Deadline</span>Sun 15 Nov · 23:59 Bogotá</p>
+        <p><span>Status</span>Viewer live · waiting for real scenes</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · The challenge -->
+  <section class="slide" data-n="2">
+    <p class="kicker">01 · The challenge</p>
+    <h2>What NASA asks for</h2>
+    <div class="asks">
+      <p>An <b>interactive app</b>, open source and easy to use</p>
+      <p>Built on <b>NISAR</b> radar data (NASA–ISRO, L-band)</p>
+      <p>Track <b>one type of surface change</b> at a real place</p>
+      <p>Compare <b>different dates</b>, show the change clearly</p>
+      <p><b>Explain why</b> it changed: the physical drivers</p>
+      <p>Tell it as a story: the Earth's surface <b>dancing</b></p>
+    </div>
+    <div class="gates">
+      <div><b>Gate 1 · Demo</b><p>Max 7 slides or a 30-second video. Public, no login.</p></div>
+      <div><b>Gate 2 · Project</b><p>Public link to the repository and the app. No login.</p></div>
+      <div><b>Gate 3 · NASA data</b><p>At least one NASA dataset or resource, with its full URL.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 · Simple explanation -->
+  <section class="slide" data-n="3">
+    <p class="kicker">02 · The idea in four pictures</p>
+    <h2>How a radar satellite sees change</h2>
+    <div class="pics">
+      <div>
+        <svg viewBox="0 0 300 220" aria-hidden="true">
+          <g stroke="#fff" fill="none" stroke-width="2.5">
+            <rect x="118" y="24" width="64" height="30"/><path d="M118 39H72M182 39h46"/><path d="M72 30v18M228 30v18"/>
+            <path d="M150 54v10"/>
+          </g>
+          <g stroke="#aaa" fill="none" stroke-width="1.6" stroke-dasharray="4 6"><path d="M150 70 95 190M150 70l55 120"/></g>
+          <ellipse cx="96" cy="112" rx="52" ry="20" fill="#2a2a2a"/><ellipse cx="128" cy="104" rx="38" ry="18" fill="#2a2a2a"/>
+          <path d="M20 196h260" stroke="#fff" stroke-width="2"/>
+          <text x="150" y="16" fill="#a3a3a3" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">NISAR</text>
+        </svg>
+        <b>1 · It brings its own light</b>
+        <p>NISAR sends a radio pulse to the ground and listens to the echo, like clapping in a dark room. It works at night and right through clouds.</p>
+      </div>
+      <div>
+        <svg viewBox="0 0 300 220" aria-hidden="true">
+          <path d="M60 40 150 160 260 50" stroke="#fff" stroke-width="2.5" fill="none"/><path d="M248 46l12 4-6 11" stroke="#fff" stroke-width="2.5" fill="none"/>
+          <rect x="20" y="160" width="260" height="36" fill="#0c2236"/><path d="M20 160h260" stroke="#4c9bff" stroke-width="2"/>
+          <text x="150" y="214" fill="#a3a3a3" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">CALM WATER</text>
+        </svg>
+        <b>2 · Water is a mirror</b>
+        <p>Calm water bounces the pulse away, so almost no echo comes back. In radar images, <span class="b">water looks dark</span>.</p>
+      </div>
+      <div>
+        <svg viewBox="0 0 300 220" aria-hidden="true">
+          <path d="M150 30v120" stroke="#fff" stroke-width="2.5"/>
+          <g stroke="#ff5a4f" stroke-width="2" fill="none"><path d="M150 150 90 80M150 150l60-70M150 150l-10-90M150 150l20-95"/></g>
+          <g fill="#3be3a0"><path d="M50 196 70 140 90 196z"/><path d="M95 196l25-70 25 70z"/><path d="M150 196l22-60 22 60z"/><path d="M200 196l25-75 25 75z"/></g>
+          <path d="M20 196h260" stroke="#fff" stroke-width="2"/>
+          <text x="150" y="214" fill="#a3a3a3" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">TREES · ROUGH GROUND</text>
+        </svg>
+        <b>3 · Rough things echo back</b>
+        <p>Trees, crops, rocks and broken ice scatter the pulse in every direction, and part of it returns. They <strong>look bright</strong>.</p>
+      </div>
+      <div>
+        <svg viewBox="0 0 300 220" aria-hidden="true">
+          <rect x="16" y="40" width="124" height="124" fill="#cfcfcf"/><ellipse cx="78" cy="102" rx="34" ry="26" fill="#111"/>
+          <rect x="160" y="40" width="124" height="124" fill="#cfcfcf"/><ellipse cx="222" cy="104" rx="50" ry="40" fill="#111"/>
+          <text x="78" y="30" fill="#ff4fa3" font-family="IBM Plex Mono" font-size="13" text-anchor="middle">JUNE</text>
+          <text x="222" y="30" fill="#3be3a0" font-family="IBM Plex Mono" font-size="13" text-anchor="middle">SEPTEMBER</text>
+          <text x="150" y="196" fill="#a3a3a3" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">SAME PLACE · TWO DATES</text>
+        </svg>
+        <b>4 · Compare two dates</b>
+        <p>Same place, two dates. Where it got darker, water may have arrived (<span class="b">blue</span>). Where it got brighter, the surface got rougher (<span class="r">red</span>).</p>
+      </div>
+    </div>
+    <p class="bottomline rule">That is the whole app: <b>two radar photos of the same place, a line to slide between them, and a map of what changed.</b></p>
+  </section>
+
+  <!-- 4 · Built -->
+  <section class="slide" data-n="4">
+    <p class="kicker">03 · Already built · branch <span class="mono">main</span> <span class="tag live">Live</span></p>
+    <h2>What we already have</h2>
+    <div class="cols built">
+      <img src="img/demo-two-dates.jpg" alt="Surface Dance viewer with synthetic demo data">
+      <div class="list">
+        <p><b>Live web app</b> — map with a line to slide between two dates, "What changed" view, Play the dance, launch-style HUD.</p>
+        <p><b>NISAR pipeline</b> — reads GCOV (HDF5), crops the area, filters speckle, computes change and publishes map layers.</p>
+        <p><b>Safety rules</b> — refuses to compare scenes from different collections or CRIDs; every scene shows its date, collection and CRID.</p>
+        <p><b>Demo mode</b> — synthetic scenes to test everything, always under a yellow "not NISAR data" banner.</p>
+        <p><b>Quality gate</b> — every pull request gets a preview link and automatic tests; <span class="mono">main</span> only accepts tested changes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · Final product -->
+  <section class="slide" data-n="5">
+    <p class="kicker">04 · What we expect at the end</p>
+    <h2>The final screen</h2>
+    <div class="shots">
+      <figure>
+        <img src="img/demo-two-dates.jpg" alt="Two dates view">
+        <figcaption><b>Two dates</b>Slide the line or press Play: the radar image of each date on each side, with dates, days between them and how much changed.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/demo-what-changed.jpg" alt="What changed view">
+        <figcaption><b>What changed</b>Blue where the echo faded (smoother or wetter), red where it grew (rougher). Below: a spec sheet with every scene's collection and CRID.</figcaption>
+      </figure>
+    </div>
+    <p class="note">These screenshots use <b>synthetic test data</b>. The goal is the same screens with real NISAR scenes of our study area — proposed: <b>Ciénaga Grande de Santa Marta</b>.</p>
+  </section>
+
+  <!-- 6 · To build -->
+  <section class="slide" data-n="6">
+    <p class="kicker">05 · Still to build for the challenge <span class="tag pending">To do</span></p>
+    <h2>What is missing</h2>
+    <div class="todo">
+      <div>
+        <h3>Data & science</h3>
+        <p><i>01</i><span>Confirm study area and the one-sentence question</span><em>Juan H.</em></p>
+        <p><i>02</i><span>Download 2 NISAR GCOV scenes, same collection</span><em>Tinjacá</em></p>
+        <p><i>03</i><span>Record date, collection and CRID of each scene</span><em>Tinjacá</em></p>
+        <p><i>04</i><span>Check polarizations with <span class="mono">--list</span> (HH, HV)</span><em>Moneeb</em></p>
+        <p><i>05</i><span>Write why the surface changed (physical drivers)</span><em>Santiago</em></p>
+        <p><i>06</i><span>Approve method values: filter 5×5, threshold 3 dB</span><em>Santiago</em></p>
+      </div>
+      <div>
+        <h3>App & delivery</h3>
+        <p><i>07</i><span>Run the pipeline on real scenes and publish layers</span><em>Fredy</em></p>
+        <p><i>08</i><span>Add the drivers text and final wording to the app</span><em>Fredy</em></p>
+        <p><i>09</i><span>7 demo slides with the dance narrative</span><em>Daira</em></p>
+        <p><i>10</i><span>Test both public links from a clean device</span><em>Moneeb</em></p>
+        <p><i>11</i><span>Decide: project name, keep or remove demo mode</span><em>Juan H.</em></p>
+        <p><i>12</i><span>Fill the form, check every claim, submit by 22:00</span><em>Juan H.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Team -->
+  <section class="slide" data-n="7">
+    <p class="kicker">06 · Who does what</p>
+    <h2>Team tasks</h2>
+    <table class="team">
+      <thead><tr><th>Member</th><th>Task</th><th>Deliverable</th><th>Due · Bogotá</th></tr></thead>
+      <tbody>
+        <tr><td>Juan S. Huertas Olea<span>Lead · research · story</span></td><td>Study area, research question, project name; owns the submission form</td><td>Question in one line; form submitted with every claim checked</td><td>Now · Sun 22:00</td></tr>
+        <tr><td>Juan S. Tinjacá<span>GIS · remote sensing</span></td><td>Download two NISAR GCOV scenes of the same area, same collection</td><td>Files + collection, CRID and date in <span class="mono">docs/DATOS.md</span></td><td>As soon as possible</td></tr>
+        <tr><td>Fredy Chaparro<span>Architecture · front · back</span></td><td>Run the pipeline on real data, keep the app, tests and repo healthy</td><td>Real layers live on the public site</td><td>Sun 10:00</td></tr>
+        <tr><td>Santiago Calderón<span>Science validation</span></td><td>Explain the physical drivers; veto any claim we cannot support</td><td>Drivers paragraph + approved method values</td><td>Sun 10:00</td></tr>
+        <tr><td>Daira Patarroyo<span>Story · design · video</span></td><td>Demo slides and the dance narrative; brand rules (no NASA logos)</td><td>7 slides, public link</td><td>Sun 18:00</td></tr>
+        <tr><td>Moneeb Hussain<span>Signals · software · Pakistan</span></td><td>Check polarizations are read right; test links from Pakistan; night shift</td><td>Polarization check + clean-device test report</td><td>Sun 18:00</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 8 · Workflow -->
+  <section class="slide" data-n="8">
+    <p class="kicker">07 · How we work</p>
+    <h2>From task to live site</h2>
+    <div class="flow">
+      <div><b>Issue</b><p>Each task becomes a GitHub issue with an owner</p></div>
+      <div><b>Branch</b><p>Work on your own branch, never on main</p></div>
+      <div><b>Pull request</b><p>Open a PR that closes the issue</p></div>
+      <div class="on"><b>Preview + tests</b><p>A private copy of the site and automatic checks</p></div>
+      <div><b>Review</b><p>Fredy reviews; Santiago checks science text</p></div>
+      <div><b>Merge → live</b><p>The public site updates in 1–2 minutes</p></div>
+    </div>
+    <div class="pipe">
+      <p class="kicker">Data path</p>
+      <div class="steps">
+        <span>ASF Vertex · NISAR GCOV .h5</span><i>→</i>
+        <span>nisar_gcov_to_tif.py --list / --pol / --bbox</span><i>→</i>
+        <span>change_detection.py</span><i>→</i>
+        <span>web/layers/</span><i>→</i>
+        <span>public site</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Links -->
+  <section class="slide" data-n="9">
+    <p class="kicker">08 · Important links</p>
+    <h2>Where everything lives</h2>
+    <div class="links">
+      <p><b>Live app</b><a href="https://fredyxander.github.io/bailarines-del-sar/">fredyxander.github.io/bailarines-del-sar</a></p>
+      <p><b>Repository</b><a href="https://github.com/fredyxander/bailarines-del-sar">github.com/fredyxander/bailarines-del-sar</a></p>
+      <p><b>Demo with synthetic data</b><a href="https://fredyxander.github.io/bailarines-del-sar/?demo=1">…/bailarines-del-sar/?demo=1</a></p>
+      <p><b>How to run the pipeline</b><a href="https://github.com/fredyxander/bailarines-del-sar#readme">README · Flujo de trabajo</a></p>
+      <p><b>Scene log (collection · CRID · date)</b><a href="https://github.com/fredyxander/bailarines-del-sar/blob/main/docs/DATOS.md">docs/DATOS.md</a></p>
+      <p><b>PR previews</b><span class="mono muted">…/bailarines-del-sar/pr-preview/pr-&lt;number&gt;/</span></p>
+      <p><b>NISAR data</b><a href="https://search.asf.alaska.edu/">search.asf.alaska.edu</a> · <a href="https://nisar-docs.asf.alaska.edu/">nisar-docs.asf.alaska.edu</a></p>
+      <p><b>Reference documents</b><a href="https://github.com/fredyxander/bailarines-del-sar/tree/main/base%20reference">base reference/</a></p>
+    </div>
+    <p class="next rule" style="padding-top:22px"><span class="tag pending">Next</span>Approve this briefing → turn slide 6 into GitHub issues, one per task, with an owner.</p>
+  </section>
+</main>
+
+<div class="hint">← → to navigate · P to print</div>
+<div class="nav"><button id="prev" aria-label="Previous slide">‹</button><button id="next" aria-label="Next slide">›</button></div>
+
+<script>
+  (function () {
+    const slides = [...document.querySelectorAll('.slide')];
+    let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+    function fit() {
+      const s = Math.min(innerWidth / 1600, innerHeight / 900);
+      slides.forEach((el) => { el.style.transform = `scale(${s})`; });
+    }
+    function show(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((el, k) => el.classList.toggle('active', k === i));
+      history.replaceState(null, '', '#' + (i + 1));
+    }
+    addEventListener('resize', fit);
+    addEventListener('keydown', (e) => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(i + 1); }
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+      if (e.key === 'Home') show(0);
+      if (e.key === 'End') show(slides.length - 1);
+      if (e.key.toLowerCase() === 'p') print();
+    });
+    document.getElementById('prev').onclick = () => show(i - 1);
+    document.getElementById('next').onclick = () => show(i + 1);
+    fit(); show(i);
+  })();
+</script>
+</body>
+</html>
