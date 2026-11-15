@@ -181,7 +181,7 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 
 
 /* Mission results panel: always visible next to the map */
-.results { height: 100svh; min-height: 620px; overflow-y: auto; display: flex; flex-direction: column; padding: calc(var(--banner) + 70px) 24px 12px; background: #050505; border-left: 1px solid var(--hair); scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+.results { --panel-top: calc(var(--banner) + 66px); margin-top: var(--panel-top); height: calc(100svh - var(--panel-top)); min-height: calc(620px - var(--panel-top)); overflow-y: auto; display: flex; flex-direction: column; padding: 4px 24px 12px; background: #050505; border-left: 1px solid var(--hair); scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
 .results > .kicker { margin-bottom: 6px; }
 .question { margin: 0 0 10px; font: 500 13px/1.4 var(--sans); color: #e5e5e5; }
 .m-block { padding: 9px 0; border-top: 1px solid var(--hair); }
@@ -220,8 +220,27 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 .how .prose { margin-top: 8px; }
 .how .prose p { margin: 0 0 8px; font-size: 13px; line-height: 1.5; }
 .results .colophon { margin-top: auto; padding: 8px 0 0; gap: 2px; font-size: 10px; line-height: 1.4; }
+@media (max-height: 820px) and (min-width: 721px) { .dates-block { display: none; } }
 @media (max-height: 900px) and (min-width: 721px) { .m-files { display: none; } .m-note { font-size: 12px; } }
 .results .colophon b { color: var(--white); font-weight: 600; }
+
+.why summary { list-style: none; cursor: pointer; }
+.why summary::-webkit-details-marker { display: none; }
+.why summary h2 { margin: 0; }
+.why summary h2::after { content: "+"; font: 400 15px var(--sans); }
+.why[open] summary h2::after { content: "−"; }
+.why-lead { margin: 6px 0 0; font: 600 14px/1.35 var(--sans); color: var(--white); }
+.why-langs { display: flex; gap: 14px; margin: 10px 0 6px; }
+.why-langs button { padding: 0 0 4px; background: none; border: 0; border-bottom: 2px solid transparent; color: var(--grey); font: 700 11px var(--sans); letter-spacing: .16em; cursor: pointer; }
+.why-langs button[aria-pressed="true"] { color: var(--white); border-color: var(--white); }
+.why-body h3 { margin: 12px 0 4px; font: 700 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--grey); }
+.why-body p, .why-body li { font-size: 12.5px; line-height: 1.5; color: #d4d4d4; }
+.why-body p { margin: 0 0 6px; }
+.why-body ul { margin: 0; padding-left: 16px; }
+.why-body li { margin: 2px 0; }
+.why-body b { color: var(--white); font-weight: 600; }
+.why-note { color: var(--grey) !important; }
+.why-src { margin-top: 8px !important; font: 400 10px/1.45 var(--mono) !important; color: var(--grey-2) !important; }
 
 /* Archive timeline */
 .timeline { position: relative; height: 72px; margin-top: 40px; border-top: 1px solid var(--hair); overflow-x: clip; }
@@ -247,9 +266,10 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 
 /* Short laptop screens: keep the hero text clear of the nav */
 @media (max-height: 760px) and (min-width: 721px) {
-  .results { padding-top: calc(var(--banner) + 64px); }
+  .results { --panel-top: calc(var(--banner) + 62px); padding-top: 2px; }
   .m-water .m-sub, .results .spec-inline { display: none; }
   .m-water, .m-note { margin-top: 6px; }
+  .dates-block { display: none; }
   .m-block { padding: 7px 0; }
   .question { margin-bottom: 8px; }
   .overture h1 { margin: 10px 0 14px; }
@@ -276,7 +296,7 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
   .demo-banner span { display: none; }
   .hero { display: block; height: auto; min-height: 0; overflow: visible; }
   .map-col { overflow: visible; }
-  .results { height: auto; min-height: 0; padding: 18px 16px 24px; border-left: 0; border-top: 1px solid var(--hair); }
+  .results { margin-top: 0; height: auto; min-height: 0; padding: 18px 16px 24px; border-left: 0; border-top: 1px solid var(--hair); }
   .map-wrap { position: relative; inset: auto; margin-top: var(--banner); height: 64svh; min-height: 380px; }
   .map-col::after { display: none; }
   .date-tag { top: 70px; }

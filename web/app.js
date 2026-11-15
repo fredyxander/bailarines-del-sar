@@ -290,6 +290,7 @@
     $('stats').hidden = false;
     $('thr').textContent = s.threshold_db;
     renderCompare().catch(() => {});
+    loadWhy();
     const lim = meta.display.change_limit_db;
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
@@ -306,6 +307,24 @@
     }
     return metaCache[url];
   }
+  // "Why it changed": per-site text in layers/<site>/why.json (hidden if absent, e.g. the demo)
+  let whyData = null, whyLang = 'en';
+  function renderWhy() {
+    const box = $('why');
+    if (!whyData || !whyData[whyLang]) { box.hidden = true; return; }
+    box.hidden = false;
+    $('why-lead').textContent = whyData[whyLang].lead;
+    $('why-body').innerHTML = whyData[whyLang].html; // our own repository content
+    box.querySelectorAll('.why-langs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === whyLang));
+  }
+  async function loadWhy() {
+    if (!state.site.why) { whyData = null; renderWhy(); return; }
+    whyData = await fetch(`${LAYERS}/${encodeURIComponent(state.site.id)}/why.json`, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    renderWhy();
+  }
+  document.querySelectorAll('#why .why-langs button').forEach((b) => b.addEventListener('click', () => { whyLang = b.dataset.lang; renderWhy(); }));
+
   async function renderCompare() {
     const tbl = $('cmp');
     const pols = state.site.polarizations;
@@ -354,7 +373,8 @@
 
   document.querySelectorAll('a[href="#how"]').forEach((a) => a.addEventListener('click', () => { $('how').open = true; }));
   // Tall desktop screens have room: open "How to read it" by default.
-  if (innerHeight >= 900 && innerWidth > 720) $('how').open = true;
+  // Very tall screens have room: open the explanations by default.
+  if (innerHeight >= 1300 && innerWidth > 720) { $('why').open = true; $('how').open = true; }
   buildTimeline();
   fetch(`${LAYERS}/index.json`, { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
