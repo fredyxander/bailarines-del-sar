@@ -58,6 +58,9 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-15 · #23 · Fredy — Water area (HH, per-date Otsu): **329.2 km² → 343.7 km²** (+14.5 km², +4.4%); with a fixed −15 dB: 330.7 → 333.0 km². HV Otsu: 349.8 → 356.5 km². Water extent is essentially stable.
 - 2026-11-15 · #14 · Fredy — For the drivers text: the HH **water mode shifted from ≈ −22 to ≈ −19 dB (+3 dB)** while the land mode did not move; in HV the water mode moved only ≈ +0.5 dB. The change is at the water surface, not new vegetation above it.
 
+- 2026-11-15 · #23 · Fredy — Update to Moneeb's note above: #16 is closed and the **real-scene values are in `web/layers/cienaga/HHHH/meta.json`**: water **329.48 → 343.98 km²** (+14.5 km², +4.4 %), Otsu **−15.17 / −13.73 dB**. They match the independent check in this section.
+- 2026-11-15 · #23 · Fredy — If the area cannot be measured (geographic CRS, no valid pixels) `change_detection.py` now **skips the water stats with a warning** instead of aborting; the change map is still produced. The panel shows "Open water · HH" only when the stats exist.
+
 ## 6. App and deployment
 
 - 2026-11-14 · — · Fredy — Every merge to `main` publishes `web/` to GitHub Pages (`gh-pages` branch). Each PR gets a preview at `…/pr-preview/pr-<n>/` and must pass the `checks` job (`tests/test_pipeline.py`, `tests/smoke_test.py`).

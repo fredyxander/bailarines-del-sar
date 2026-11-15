@@ -197,6 +197,22 @@ def test_water_pipeline() -> None:
             assert key not in stats, key
         print("ok  HVHV no escribe área de agua")
 
+        # Geographic CRS: the change map is still produced, water stats are skipped.
+        geo = from_origin(-74.7, 10.95, 0.001, 0.001)
+        for name, radius in (("ga.tif", 120), ("gb.tif", 200)):
+            write_clean_tif(t / name, radius, geo, CRS.from_epsg(4326))
+        out = t / "geo"
+        p = run(
+            str(PIPE / "change_detection.py"), str(t / "ga.tif"), str(t / "gb.tif"),
+            "--site", "geo", "--pol", "HHHH", "--before-info", info_a, "--after-info", info_b,
+            "--filter", "none", "--out-root", str(out),
+        )
+        stats = json.loads((out / "geo" / "HHHH" / "meta.json").read_text(encoding="utf-8"))["stats"]
+        for key in WATER_KEYS:
+            assert key not in stats, key
+        assert "se omite el área de agua" in p.stderr, p.stderr
+        print("ok  CRS geográfico: mapa de cambio sí, área de agua omitida con aviso")
+
 
 def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
     yy, xx = np.mgrid[0:N, 0:N]

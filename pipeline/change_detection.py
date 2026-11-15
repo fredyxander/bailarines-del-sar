@@ -179,13 +179,18 @@ def update_index(root: Path, site: str, site_name: str, pol: str, meta: dict) ->
     idx_path.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
-def native_water(linear: np.ndarray, prof: dict, kind: str, window: int, enl: float) -> dict:
-    """Otsu + km² on a filtered copy. The caller's array is left unchanged."""
+def native_water(linear: np.ndarray, prof: dict, kind: str, window: int, enl: float) -> dict | None:
+    """Otsu + km² on a filtered copy. The caller's array is left unchanged.
+
+    If the area cannot be measured (e.g. a geographic CRS, or no valid pixels)
+    the change map is still produced: the water stats are skipped with a warning.
+    """
     filtered = speckle_filter(np.copy(linear), kind, window, enl)
     try:
         return measure_water(filtered, prof["transform"], prof["crs"])
     except ValueError as exc:
-        raise SystemExit(f"Área de agua: {exc}") from exc
+        print(f"Aviso: se omite el área de agua ({exc}).", file=sys.stderr)
+        return None
 
 
 def slug(text: str) -> str:
@@ -256,10 +261,10 @@ def main() -> None:
     # The copies are filtered here; b_lin / a_lin stay raw for the web path.
     water = None
     if pol == "HHHH":
-        water = (
-            native_water(b_lin, b_prof, args.filter, args.window, args.enl),
-            native_water(a_lin, a_prof, args.filter, args.window, args.enl),
-        )
+        w_before = native_water(b_lin, b_prof, args.filter, args.window, args.enl)
+        w_after = native_water(a_lin, a_prof, args.filter, args.window, args.enl) if w_before else None
+        if w_before and w_after:
+            water = (w_before, w_after)
     grid = web_grid(b_prof, args.max_size)
     b_lin = to_grid(b_lin, b_prof, grid)
     a_lin = to_grid(a_lin, a_prof, grid)

@@ -197,6 +197,8 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 .cmp .dot { width: 7px; height: 7px; margin-right: 7px; vertical-align: 1px; }
 .dot { display: inline-block; border-radius: 50%; }
 .dot.fade { background: var(--fade); } .dot.grow { background: var(--grow); }
+.m-water { margin: 9px 0 0; font: 500 12.5px/1.4 var(--sans); color: #d4d4d4; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.m-water b { font: 600 12.5px var(--mono); color: var(--fade); }
 .m-note { margin: 9px 0 0; font-size: 12.5px; line-height: 1.45; color: #cfcfcf; }
 .m-label { margin-right: 4px; font: 600 9.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--grey); }
 .spec-inline { display: flex; flex-wrap: wrap; gap: 2px 0; margin: 7px 0 0; font: 400 10.5px/1.5 var(--mono); }
@@ -246,6 +248,8 @@ button:disabled, select:disabled { cursor: not-allowed; opacity: .4; }
 /* Short laptop screens: keep the hero text clear of the nav */
 @media (max-height: 760px) and (min-width: 721px) {
   .results { padding-top: calc(var(--banner) + 64px); }
+  .m-water .m-sub, .results .spec-inline { display: none; }
+  .m-water, .m-note { margin-top: 6px; }
   .m-block { padding: 7px 0; }
   .question { margin-bottom: 8px; }
   .overture h1 { margin: 10px 0 14px; }
