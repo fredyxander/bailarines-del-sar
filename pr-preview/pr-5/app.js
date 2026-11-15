@@ -46,7 +46,7 @@
 
   // ---- State ----------------------------------------------------------------
   const params = new URLSearchParams(location.search);
-  const state = { index: null, site: null, pol: null, mode: params.get('mode') === 'swipe' ? 'swipe' : 'change', pct: 0.5, meta: null };
+  const state = { index: null, site: null, pol: null, mode: params.get('mode') === 'change' ? 'change' : 'swipe', pct: 0.5, meta: null };
   const overlays = { before: null, after: null, change: null };
 
   // ---- Archive timeline -------------------------------------------------------
@@ -157,6 +157,26 @@
     b.querySelector('.play-label').textContent = on ? 'Pause' : 'Play the dance';
   }
   $('play').onclick = () => (raf ? stop() : play());
+
+  // First load: a short sway shows that the line can be moved. Any touch stops it.
+  let hinted = false;
+  function hint() {
+    if (hinted || state.mode !== 'swipe' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    hinted = true;
+    const start = performance.now(), DUR = 2200;
+    const step = (now) => {
+      const t = now - start;
+      if (raf || t > DUR) { if (!raf) { state.pct = 0.5; updateClip(); } return; }
+      state.pct = 0.5 + 0.16 * Math.sin((2 * Math.PI * t) / 1100) * (1 - t / DUR);
+      updateClip();
+      hintRaf = requestAnimationFrame(step);
+    };
+    hintRaf = requestAnimationFrame(step);
+  }
+  let hintRaf = null;
+  const cancelHint = () => { if (hintRaf) cancelAnimationFrame(hintRaf); hintRaf = null; };
+  handle.addEventListener('pointerdown', cancelHint);
+  handle.addEventListener('keydown', cancelHint, true);
   handle.addEventListener('pointerdown', stop);
   handle.addEventListener('keydown', stop, true);
 
@@ -265,6 +285,7 @@
     $('leg-min').textContent = '−' + lim.toFixed(1) + ' dB';
     $('leg-max').textContent = '+' + lim.toFixed(1) + ' dB';
     setMode(state.mode);
+    hint();
   }
 
   function showEmpty() {
