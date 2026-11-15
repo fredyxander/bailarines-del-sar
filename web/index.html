@@ -61,6 +61,29 @@
         <p class="read-foot" id="read-foot"></p>
       </div>
 
+      <div id="ask" class="read-card ask-card" role="region" aria-label="Ask the radar" hidden>
+        <div class="read-head">
+          <p class="kicker">Ask the radar <span class="ai-tag">AI</span></p>
+          <div class="why-langs ask-langs" role="group" aria-label="Language">
+            <button type="button" data-lang="en" aria-pressed="true">EN</button>
+            <button type="button" data-lang="es" aria-pressed="false">ES</button>
+          </div>
+          <button type="button" class="read-close" id="ask-close" aria-label="Close">×</button>
+        </div>
+        <div class="ask-qs" id="ask-qs" role="group" aria-label="Questions"></div>
+        <p class="read-text ask-answer" id="ask-answer" aria-live="polite"></p>
+        <p class="read-foot" id="ask-foot"></p>
+        <form class="ask-free" id="ask-free" autocomplete="off">
+          <p class="ask-free-head"><span class="label" id="ask-free-label">Your own question</span> <span class="exp-tag">experimental</span></p>
+          <div class="ask-free-row">
+            <input id="ask-input" type="text" maxlength="200" required aria-labelledby="ask-free-label" placeholder="e.g. Could rain explain it?">
+            <button type="submit" class="btn ask-go" id="ask-go">Ask</button>
+          </div>
+          <div class="ask-match" id="ask-match" aria-live="polite"></div>
+          <p class="ask-free-note" id="ask-free-note"></p>
+        </form>
+      </div>
+
       <div class="hud">
         <div class="hud-controls">
           <label class="ctl"><span class="label">Area</span><select id="site" class="site-select"></select></label>
@@ -77,6 +100,9 @@
           </button>
           <button id="read-btn" class="btn read-btn" type="button" aria-expanded="false" aria-controls="read" hidden>
             <span class="ai-tag" aria-hidden="true">AI</span>Read the dance
+          </button>
+          <button id="ask-btn" class="btn read-btn" type="button" aria-expanded="false" aria-controls="ask" hidden>
+            <span class="ai-tag" aria-hidden="true">AI</span>Ask the radar
           </button>
         </div>
 
