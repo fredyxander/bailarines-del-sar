@@ -1,4 +1,5 @@
 # Los Bailarines del SAR 🛰️💃
+<img width="1917" height="912" alt="image" src="https://github.com/user-attachments/assets/f6c617c8-76b3-45b0-ba8d-a506b1f76104" />
 
 **NASA Space Apps Challenge 2026** — reto *"The Earth's surface dance"* con datos de radar **NISAR** (NASA-ISRO).
 
