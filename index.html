@@ -47,41 +47,47 @@
       <a class="btn" href="#how">How to read it</a>
     </div>
 
-    <div class="hero-ui">
-      <div class="title-block">
-        <div class="site-pick">
-          <label class="kicker" for="site">Study area</label>
-          <select id="site" class="site-select"></select>
+    <div class="hud">
+      <div class="hud-controls">
+        <label class="ctl"><span class="label">Area</span><select id="site" class="site-select"></select></label>
+        <div class="ctl"><span class="label">Channel</span><div id="pol" class="tabs" role="radiogroup" aria-label="Polarization"></div></div>
+        <div class="ctl"><span class="label">View</span>
+          <div class="tabs" role="group" aria-label="View">
+            <button id="mode-swipe" aria-pressed="true">Two dates</button>
+            <button id="mode-change" aria-pressed="false">What changed</button>
+          </div>
         </div>
-        <h1 id="site-title" class="site-title"></h1>
-        <p id="hero-dates" class="hero-dates"></p>
+        <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
+          <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
+        </button>
       </div>
 
-      <div class="controls">
-        <div id="legend" class="legend" hidden>
-          <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
-          <em>faded · grew (dB)</em>
-        </div>
-        <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
-          <input id="opacity" type="range" min="0" max="100" value="85">
-        </label>
-        <div class="control-row">
-          <div class="group">
-            <span class="label">Channel</span>
-            <div id="pol" class="tabs" role="radiogroup" aria-label="Polarization"></div>
+      <div class="hud-bar">
+      <div class="gauge fade">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-dec-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
+        <div class="g-read"><span class="g-label">Faded</span><b id="g-dec">—</b><span class="g-unit">% of area</span></div>
+      </div>
+        <div class="hud-center">
+          <div class="track" aria-hidden="true">
+            <span class="ms before"><em>Before</em><i></i><small id="ms-before"></small></span>
+            <span class="ms after"><em>After</em><i></i><small id="ms-after"></small></span>
+            <span id="hud-cursor" class="cursor"></span>
           </div>
-          <div class="group">
-            <span class="label">View</span>
-            <div class="tabs" role="group" aria-label="View">
-              <button id="mode-swipe" aria-pressed="true">Two dates</button>
-              <button id="mode-change" aria-pressed="false">What changed</button>
+          <div class="clock" aria-label="Days between the two scenes"><span class="tplus">T+</span><span id="hud-days">000</span><span class="dunit">days</span></div>
+          <p class="mission"><span id="site-title"></span><span id="hud-meta"></span></p>
+          <div class="hud-legend">
+            <div id="legend" class="legend" hidden>
+              <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
             </div>
+            <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
+              <input id="opacity" type="range" min="0" max="100" value="85">
+            </label>
           </div>
-          <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
-            <span class="play-icon" aria-hidden="true">▶</span><span class="play-label">Play the dance</span>
-          </button>
         </div>
-        <p id="pol-note" class="pol-note"></p>
+      <div class="gauge grow">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path class="trk" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100"/><path id="g-inc-arc" class="val" d="M18.89 81.11 A44 44 0 1 1 81.11 81.11" pathLength="100" stroke-dasharray="0 100"/></svg>
+        <div class="g-read"><span class="g-label">Grew</span><b id="g-inc">—</b><span class="g-unit">% of area</span></div>
+      </div>
       </div>
     </div>
     <a class="scroll-cue" href="#details">Mission details <span aria-hidden="true">↓</span></a>
@@ -99,6 +105,11 @@
           <p class="fine">Change of at least <span id="thr"></span> dB · median shift <span id="s-med"></span></p>
         </div>
       </div>
+    </div>
+
+    <div class="row">
+      <h2>Channel</h2>
+      <div class="prose"><p id="pol-note"></p></div>
     </div>
 
     <div class="row">
