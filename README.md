@@ -16,7 +16,7 @@ Una aplicación web interactiva que muestra **cómo cambia la superficie de la T
 ## Presentación del equipo
 
 Resumen de lo construido, lo que falta, tareas por integrante, flujo de trabajo y enlaces:
-**https://fredyxander.github.io/bailarines-del-sar/presentation/** (PDF: [`docs/team-briefing.pdf`](docs/team-briefing.pdf)). Documentos de referencia del equipo en [`base reference/`](base%20reference/).
+**https://fredyxander.github.io/bailarines-del-sar/presentation/** (inglés / español con el selector EN · ES; PDF: [inglés](docs/team-briefing.pdf) · [español](docs/team-briefing-es.pdf)). Documentos de referencia del equipo en [`base reference/`](base%20reference/).
 
 ## Estructura
 
