@@ -13,6 +13,10 @@ Una aplicación web interactiva que muestra **cómo cambia la superficie de la T
 - **Zonas de estudio:** Ciénaga Grande de Santa Marta, Magdalena, Colombia (`-74.70,10.75,-74.40,10.95`, WGS84). Segundo panel (Península Antártica): descartado.
 - **Pregunta:** **ES:** Entre el 22 de junio y el 20 de octubre de 2026, ¿dónde cambió la señal de radar sobre la Ciénaga Grande, y permite la comparación de HH con HV saber si el cambio ocurrió en la superficie o en la vegetación sobre ella? **EN:** Between 22 June and 20 October 2026, where did the radar signal over the Ciénaga Grande change — and does comparing HH with HV tell us whether the change happened at the surface or in the vegetation above it?
 
+## Resultado principal
+
+**Cambió la superficie del agua; la ciénaga no creció.** Entre el 22 de junio y el 20 de octubre de 2026, el agua abierta pasó de 329 a 344 km² (+4 %). Sobre el agua, el eco HH subió cerca de +3 dB mientras HV subió solo +0,5 dB, y el viento fue más débil en la fecha más brillante. Eso apunta a un cambio en la superficie del agua y no a vegetación nueva. Las causas que siguen abiertas (brisa local, lluvia al momento del paso, agua muy somera) son hipótesis por comprobar. Texto completo, en inglés y español, en la sección *Why it changed* de la app (`web/layers/cienaga/why.json`).
+
 ## Presentación del equipo
 
 Resumen de lo construido, lo que falta, tareas por integrante, flujo de trabajo y enlaces:
@@ -115,6 +119,8 @@ Parts of this repository were written with the assistance of AI coding tools, an
 ## 🇬🇧 English
 
 **Los Bailarines del SAR** ("The SAR Dancers") is an interactive web app for NASA Space Apps Challenge 2026. It shows **how Earth's surface changes** between two dates using NISAR synthetic aperture radar data. Live demo: https://fredyxander.github.io/bailarines-del-sar/
+
+**Main result:** the water surface changed — the lagoon did not grow. Open water went from 329 to 344 km² (+4%) between 22 June and 20 October 2026; over water HH rose about +3 dB while HV rose only +0.5 dB, and wind was weaker on the brighter date. Open causes (local breeze, rain at overpass, very shallow water) are hypotheses to test. Full text in the app's *Why it changed* section.
 
 - `pipeline/nisar_gcov_to_tif.py` extracts one polarization of a NISAR GCOV (HDF5) product, cropped to an area of interest. `pipeline/change_detection.py` filters speckle (boxcar or Lee, stated window), computes change as `10·log10(after/before)` dB, refuses to compare scenes from different collections/CRIDs, and publishes map layers to `web/layers/`.
 - `web/` is a Leaflet map with a before/after swipe, a change map, a polarization selector and the collection, CRID and date of every scene.

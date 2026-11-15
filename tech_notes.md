@@ -66,6 +66,9 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-14 · — · Fredy — Every merge to `main` publishes `web/` to GitHub Pages (`gh-pages` branch). Each PR gets a preview at `…/pr-preview/pr-<n>/` and must pass the `checks` job (`tests/test_pipeline.py`, `tests/smoke_test.py`).
 - 2026-11-14 · — · Fredy — Layers are read from `web/layers/index.json` and `web/layers/<site>/<pol>/meta.json`. `?demo=1` reads `web/demo/` (synthetic, yellow banner).
 
+- 2026-11-15 · #17 · Fredy — **"Why it changed"** lives per site in `web/layers/<site>/why.json` (EN + ES, `lead` + `html`); the app loads it only when the site entry in `index.json` has `"why": true` (the demo has none). Text = Santiago's draft (#14) + measured facts (#10, #23). **Status: draft until Santiago approves** — the open causes are written as hypotheses, not claims.
+- 2026-11-15 · #17 · Fredy — Panel layout: "Why it changed" is collapsed with its one-line lead always visible (opens by default only on screens ≥ 1300 px tall); below 820 px of height the "two dates" table is hidden (the HUD already shows dates, collection and CRID) so the panel never scrolls.
+
 ## 7. Submission and rules
 
 - 2026-11-14 · — · team — Deadline **Sun 15 Nov 2026, 23:59 Bogotá**; target submit **22:00**. Fields and checklist: `base reference/OLEA_NISAR_SpaceApps2026_Submission_Pack_v2.pdf`.

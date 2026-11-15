@@ -56,6 +56,12 @@ def main() -> None:
         expect(page.locator("#demo-banner")).to_be_hidden()
         assert page.locator(".tl-seg").count() == 4, "la línea de tiempo debe tener 4 segmentos"
         print(f"ok  página normal ({'con capas reales' if has_real else 'introducción visible'})")
+        if has_real:
+            why_file = WEB / "layers" / page.locator("#site").input_value() / "why.json"
+            if why_file.exists():
+                expect(page.locator("#why")).to_be_visible()
+                expect(page.locator("#why-lead")).not_to_be_empty()
+                print("ok  'Why it changed' visible con datos reales")
 
         # 2. Modo demo
         page.goto(base + "/?demo=1&pol=HHHH", wait_until="load")
@@ -72,6 +78,8 @@ def main() -> None:
         expect(page.locator("#water")).to_be_visible()
         expect(page.locator("#water-val")).to_contain_text("km²")
         print("ok  panel: área de agua HH con km²")
+        expect(page.locator("#why")).to_be_hidden()
+        print("ok  'Why it changed' oculto en el demo (no tiene why.json)")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")
