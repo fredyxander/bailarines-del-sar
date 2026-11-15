@@ -30,15 +30,19 @@
   "display": {
     "db_range": [
       -24.566299369329144,
-      -3.596046261831749
+      -3.596046261825934
     ],
-    "change_limit_db": 7.097621004804609
+    "change_limit_db": 7.097621004774004
   },
   "stats": {
     "threshold_db": 3.0,
     "valid_pixels": 2848404,
     "pct_increase": 20.43,
     "pct_decrease": 3.56,
-    "median_change_db": 0.64
+    "median_change_db": 0.64,
+    "water_km2_before": 329.4817,
+    "water_km2_after": 343.9838,
+    "water_threshold_db_before": -15.1712,
+    "water_threshold_db_after": -13.7264
   }
 }
