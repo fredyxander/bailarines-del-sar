@@ -34,6 +34,8 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 
 - 2026-11-14 · — · Fredy — **Unverified on real data.** `nisar_gcov_to_tif.py` assumes: grid group `/science/LSAR/GCOV/grids/frequencyA`, datasets `xCoordinates` / `yCoordinates` (pixel centres), `projection` with attribute `epsg_code`, covariance terms named like `HHHH`, `HVHV`, values in **linear power**. Confirm with `--list` on a real scene (#13) and record the real paths here.
 
+- 2026-11-15 · #13 · Fredy — **Converter verified on the real files** (via the GeoTIFFs Juan H. produced with `nisar_gcov_to_tif.py`): grid `/science/LSAR/GCOV/grids/frequencyA` read correctly, HHHH and HVHV present, EPSG:32618, 10 × 10 m, both dates on the same 3282 × 2217 grid (pixel-aligned), values float32 **linear power**, no nodata. HH median −15 dB, HV median −21 dB.
+
 ## 4. Method decisions
 
 - 2026-11-14 · — · Fredy — Current defaults (to approve in #15): speckle filter **boxcar 5×5 px**, change = **10·log10(after/before)** dB, significance threshold **3 dB**, web images reprojected to EPSG:3857 and averaged in linear power up to **2048 px**. Lee filter available (`--filter lee --enl 4`).
@@ -47,6 +49,10 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-14 · — · team — Rules: real data first (Sun 10:00), AI second; if not ready by **Sun 15:00** we ship without it. AI explains and groups, **never predicts** floods or damage. Every AI output is labelled in the UI.
 - 2026-11-14 · — · Fredy — **Area in km² must be computed on the native UTM grid** (before the Web Mercator reprojection), otherwise areas are inflated by the projection.
 - 2026-11-14 · — · Fredy — No API keys in the repository or in the browser. Language-model calls run offline in the pipeline; keys come from environment variables.
+
+- 2026-11-15 · #23 · Fredy — **Water threshold check** (5×5 boxcar, dB, native UTM grid, histograms in `docs/figures/water_histograms_hh_hv.png`). HH Otsu: **−15.2 dB** (22 Jun) and **−13.8 dB** (20 Oct) → Juan H.'s −15 dB is validated for HH in June. **Do not use −15 dB on HV**: HV Otsu is −20.2 / −19.8 dB (−15 dB would flag ~80% as water).
+- 2026-11-15 · #23 · Fredy — Water area (HH, per-date Otsu): **329.2 km² → 343.7 km²** (+14.5 km², +4.4%); with a fixed −15 dB: 330.7 → 333.0 km². HV Otsu: 349.8 → 356.5 km². Water extent is essentially stable.
+- 2026-11-15 · #14 · Fredy — For the drivers text: the HH **water mode shifted from ≈ −22 to ≈ −19 dB (+3 dB)** while the land mode did not move; in HV the water mode moved only ≈ +0.5 dB. The change is at the water surface, not new vegetation above it.
 
 ## 6. App and deployment
 
