@@ -23,6 +23,8 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-14 · — · team — **Never compare across collections/CRIDs.** `change_detection.py` refuses to run if they differ.
 - 2026-11-14 · — · team — **Permanent instrument gap 27 Jul – 10 Aug 2026** in PROVISIONAL. Do not pick dates that straddle it.
 - 2026-11-14 · — · team — Scene log (date · collection · CRID · file) lives in `docs/DATOS.md`.
+- 2026-11-15 · #11 · Juan H. (download), Fredy (record) — **Scenes in use:** before `NISAR_L2_PR_GCOV_023_119_A_007_4005_DHDH_A_20260622T103154_20260622T103231_P05023_N_F_J_001`, after `NISAR_L2_PR_GCOV_033_119_A_007_4005_DHDH_A_20261020T103148_20261020T103229_P05023_N_F_J_001`. Both GCOV PROVISIONAL P05023, ascending track 119, frame 007, cycles 023 → 033 (120 days), dual-pol DHDH (HHHH + HVHV). Download URLs in `docs/DATOS.md` (Earthdata Login required). Never commit the `.h5` files.
+- 2026-11-15 · #12 · Fredy — Granule names and URLs found with the public ASF search API (`dataset=NISAR`, bbox + date); exactly one GCOV per date over the area. Overpass 10:31:54Z vs 10:31:48Z. CRID P05023 is part of the granule name.
 
 ## 3. HDF5 / GCOV structure
 
