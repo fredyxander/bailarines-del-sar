@@ -80,6 +80,8 @@ def main() -> None:
         print("ok  panel: área de agua HH con km²")
         expect(page.locator("#why")).to_be_hidden()
         print("ok  'Why it changed' oculto en el demo (no tiene why.json)")
+        expect(page.locator("#read-btn")).to_be_hidden()
+        print("ok  'Read the dance' oculto en el demo (no tiene resumen)")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")
