@@ -418,12 +418,121 @@
       ? `Respuestas redactadas por un modelo de IA (${ask.model}) solo con los números de esta página · ${reviewed}`
       : `Answers drafted by an AI model (${ask.model}) from this page's numbers only · ${reviewed}`;
     document.querySelectorAll('#ask .ask-langs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === askLang));
+    renderFree();
   }
   async function loadAsk() {
     ask = !state.site.ask ? null : await fetch(`${LAYERS}/${encodeURIComponent(state.site.id)}/ask.json`, { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : null)).catch(() => null);
     renderAsk();
   }
+  // Experimental free question: a small open model (MiniLM, Hugging Face) runs in the browser and matches the
+  // question to the closest reviewed question. It never writes text: only reviewed answers are shown.
+  const TJS = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.1/dist/transformers.min.js';
+  const EMBED_MODEL = 'Xenova/paraphrase-multilingual-MiniLM-L12-v2';
+  const SURE = 0.70, NEAR = 0.45; // similarity thresholds, calibrated on held-out questions (tech_notes, #27)
+  const FREE_TXT = {
+    en: { note: 'A small open model (MiniLM, ~118 MB, loads on your first question) runs in your browser and picks the closest reviewed answer. It never writes text; what you type stays on your device.',
+      ph: 'e.g. Could rain explain it?', label: 'Your own question', go: 'Ask', loading: 'Loading model', thinking: 'Matching…',
+      matched: 'Closest reviewed question', also: 'Also close:', near: 'Closest questions on this page — pick one:', none: 'This page’s data does not cover that question. Try one of the questions above.',
+      fail: 'The model could not load in this browser. The questions above still work.' },
+    es: { note: 'Un modelo abierto pequeño (MiniLM, ~118 MB, carga con tu primera pregunta) corre en tu navegador y elige la respuesta revisada más cercana. Nunca escribe texto; lo que escribes no sale de tu dispositivo.',
+      ph: 'p. ej. ¿Pudo ser la lluvia?', label: 'Tu propia pregunta', go: 'Preguntar', loading: 'Cargando modelo', thinking: 'Buscando…',
+      matched: 'Pregunta revisada más cercana', also: 'También cerca:', near: 'Preguntas más cercanas en esta página — elige una:', none: 'Los datos de esta página no cubren esa pregunta. Prueba una de las preguntas de arriba.',
+      fail: 'El modelo no pudo cargar en este navegador. Las preguntas de arriba siguen funcionando.' },
+  };
+  let embedder = null, bank = null, freeResult = null;
+  function renderFree() {
+    const t = FREE_TXT[askLang];
+    $('ask-free-label').textContent = t.label;
+    $('ask-input').placeholder = t.ph;
+    if (!$('ask-go').disabled) $('ask-go').textContent = t.go;
+    $('ask-free-note').textContent = t.note;
+    const box = $('ask-match');
+    box.replaceChildren();
+    if (!freeResult) return;
+    const line = document.createElement('p');
+    line.className = 'ask-match-line';
+    if (freeResult.kind === 'fail' || freeResult.kind === 'none') {
+      line.textContent = t[freeResult.kind];
+      box.append(line);
+      return;
+    }
+    if (freeResult.kind === 'sure') {
+      const q = ask.questions.find((x) => x.id === freeResult.top[0].id);
+      line.textContent = `${t.matched}: “${(q[askLang] || q.en).q}” · ${freeResult.top[0].s.toFixed(2)} · ${t.also}`;
+      box.append(line);
+    }
+    if (freeResult.kind === 'near') { line.textContent = t.near; box.append(line); }
+    const chips = document.createElement('div');
+    chips.className = 'ask-qs';
+    for (const { id } of freeResult.top.slice(freeResult.kind === 'sure' ? 1 : 0)) {
+      const q = ask.questions.find((x) => x.id === id);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ask-q';
+      b.textContent = (q[askLang] || q.en).q;
+      b.onclick = () => { askSel = id; renderAsk(); };
+      chips.append(b);
+    }
+    if (chips.childElementCount) box.append(chips);
+  }
+  async function loadEmbedder() {
+    const t = FREE_TXT[askLang];
+    const { pipeline, env } = await import(TJS);
+    env.allowLocalModels = false;
+    const seen = {};
+    embedder = await pipeline('feature-extraction', EMBED_MODEL, {
+      dtype: 'q8', device: 'wasm',
+      progress_callback: (p) => {
+        if (p.status !== 'progress' || !p.total) return;
+        seen[p.file] = [p.loaded, p.total];
+        const [l, tot] = Object.values(seen).reduce((a, v) => [a[0] + v[0], a[1] + v[1]], [0, 0]);
+        $('ask-go').textContent = `${t.loading} ${Math.round((100 * l) / tot)}%`;
+      },
+    });
+    const items = [];
+    for (const q of ask.questions) {
+      for (const lang of ['en', 'es']) {
+        for (const text of [(q[lang] || {}).q, ...((q.also || {})[lang] || [])]) if (text) items.push({ id: q.id, lang, text });
+      }
+    }
+    const vecs = (await embedder(items.map((x) => x.text), { pooling: 'mean', normalize: true })).tolist();
+    bank = items.map((x, i) => ({ ...x, v: vecs[i] }));
+  }
+  async function askFree(text) {
+    const [v] = (await embedder([text], { pooling: 'mean', normalize: true })).tolist();
+    const best = {};
+    for (const b of bank) {
+      const s = b.v.reduce((acc, x, k) => acc + x * v[k], 0);
+      if (!best[b.id] || s > best[b.id].s) best[b.id] = { id: b.id, s };
+    }
+    const top = Object.values(best).sort((a, b) => b.s - a.s).slice(0, 3);
+    // Answer in the language the question was typed in (simple Spanish markers; English otherwise).
+    askLang = /[¿¡áéíóúñ]|\b(qu[eé]|c[oó]mo|cu[aá]l|cu[aá]nt[oa]s?|d[oó]nde|por qu[eé]|hay|fue|son|est[aá]|la|el|los|las|del|se|una?)\b/i.test(text) ? 'es' : 'en';
+    if (top[0].s >= SURE) {
+      askSel = top[0].id;
+      return { kind: 'sure', top };
+    }
+    return { kind: top[0].s >= NEAR ? 'near' : 'none', top };
+  }
+  $('ask-free').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = $('ask-input').value.trim();
+    if (!text || !ask) return;
+    const go = $('ask-go');
+    go.disabled = true;
+    try {
+      if (!embedder) await loadEmbedder();
+      go.textContent = FREE_TXT[askLang].thinking;
+      freeResult = await askFree(text);
+    } catch (err) {
+      console.warn('Ask the radar: model unavailable', err);
+      freeResult = { kind: 'fail', top: [] };
+    }
+    go.disabled = false;
+    renderAsk();
+  });
+
   $('ask-btn').addEventListener('click', () => toggleCard('ask', $('ask').hidden));
   $('ask-close').addEventListener('click', () => toggleCard('ask', false));
   document.querySelectorAll('#ask .ask-langs button').forEach((b) => b.addEventListener('click', () => { askLang = b.dataset.lang; renderAsk(); }));

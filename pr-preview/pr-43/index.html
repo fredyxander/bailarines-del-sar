@@ -73,6 +73,15 @@
         <div class="ask-qs" id="ask-qs" role="group" aria-label="Questions"></div>
         <p class="read-text ask-answer" id="ask-answer" aria-live="polite"></p>
         <p class="read-foot" id="ask-foot"></p>
+        <form class="ask-free" id="ask-free" autocomplete="off">
+          <p class="ask-free-head"><span class="label" id="ask-free-label">Your own question</span> <span class="exp-tag">experimental</span></p>
+          <div class="ask-free-row">
+            <input id="ask-input" type="text" maxlength="200" required aria-labelledby="ask-free-label" placeholder="e.g. Could rain explain it?">
+            <button type="submit" class="btn ask-go" id="ask-go">Ask</button>
+          </div>
+          <div class="ask-match" id="ask-match" aria-live="polite"></div>
+          <p class="ask-free-note" id="ask-free-note"></p>
+        </form>
       </div>
 
       <div class="hud">
