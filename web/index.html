@@ -69,6 +69,7 @@
             <div class="tabs" role="group" aria-label="View">
               <button id="mode-swipe" aria-pressed="true">Two dates</button>
               <button id="mode-change" aria-pressed="false">What changed</button>
+              <button id="mode-types" aria-pressed="false" hidden title="Unsupervised groups of how HH and HV changed together, named by visible rules"><span class="tab-long">Change </span>types <span class="ai-tag tab-tag">AI</span></button>
             </div>
           </div>
           <button id="play" class="btn play" type="button" aria-pressed="false" hidden>
@@ -95,6 +96,10 @@
             <div class="hud-legend">
               <div id="legend" class="legend" hidden>
                 <span id="leg-min"></span><i class="ramp"></i><span id="leg-max"></span>
+              </div>
+              <div id="types-legend" class="types-legend" hidden>
+                <ul id="types-items"></ul>
+                <p class="types-note" id="types-note">k-means on ΔHH · ΔHV · named by rules · interpretations, not ground truth</p>
               </div>
               <label id="opacity-row" class="opacity" hidden><span>Opacity</span>
                 <input id="opacity" type="range" min="0" max="100" value="85">

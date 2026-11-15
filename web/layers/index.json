@@ -15,7 +15,8 @@
       },
       "question": "Between 22 June and 20 October 2026, where did the radar signal over the Ciénaga Grande change — and does comparing HH with HV tell us whether the change happened at the surface or in the vegetation above it?",
       "why": true,
-      "summary": true
+      "summary": true,
+      "types": true
     }
   ],
   "updated": "2026-11-15T17:57:05Z"

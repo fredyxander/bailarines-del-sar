@@ -6,6 +6,7 @@
 3. change_detection.py: salidas, metadatos y % de disminución esperado.
 4. Reglas de seguridad: colecciones/CRID distintos y fechas invertidas fallan.
 5. Máscara de agua HHHH: área conocida en la grilla UTM, nodata, CRS y HVHV.
+6. Tipos de cambio (k-means + reglas): cada zona sintética recibe su etiqueta.
 """
 
 from __future__ import annotations
@@ -237,6 +238,62 @@ def test_summary_guard() -> None:
     print("ok  resumen IA: datos solo de meta.json y números inventados detectados")
 
 
+def test_change_types() -> None:
+    """'Change types · AI': rules on centroids, then k-means end to end on four synthetic scenes."""
+    sys.path.insert(0, str(PIPE))
+    from change_types import name_centroid
+
+    t_db, w_db = 3.0, -15.0
+    assert name_centroid(+4.9, +0.9, -23.4, t_db, w_db) == "water_surface"
+    assert name_centroid(+4.9, +0.9, -8.0, t_db, w_db) == "land_rougher"
+    assert name_centroid(+3.5, +3.3, -13.0, t_db, w_db) == "grew_hv"
+    assert name_centroid(-7.6, -5.0, -9.4, t_db, w_db) == "faded_both"
+    assert name_centroid(+0.4, +0.6, -8.7, t_db, w_db) == "stable"
+    assert name_centroid(-4.0, +1.0, -8.0, t_db, w_db) == "ambiguous"
+    print("ok  tipos de cambio: reglas sobre los centroides")
+
+    # Four zones on a 600x600 UTM grid: open water (left half), land (right half);
+    # water strip gets brighter in HH only, one land block gains HV, another loses both.
+    rng = np.random.default_rng(3)
+    yy, xx = np.mgrid[0:N, 0:N]
+    water = xx < 300
+    brighter_water = water & (yy < 200)
+    grew = ~water & (yy < 150)
+    faded = ~water & (yy >= 450)
+    hh_b = np.where(water, 0.004, 0.10)
+    hv_b = np.where(water, 0.0008, 0.02)
+    hh_a = np.where(brighter_water, hh_b * 8.0, np.where(grew, hh_b * 2.5, np.where(faded, hh_b / 8.0, hh_b)))
+    hv_a = np.where(grew, hv_b * 4.0, np.where(faded, hv_b / 8.0, hv_b))
+    crs, transform = CRS.from_epsg(32618), from_origin(X0, Y0, DX, DX)
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        for name, arr in (("hhb", hh_b), ("hha", hh_a), ("hvb", hv_b), ("hva", hv_a)):
+            noisy = (arr * rng.gamma(4, 0.25, arr.shape)).astype("float32")
+            with rasterio.open(t / f"{name}.tif", "w", driver="GTiff", height=N, width=N, count=1,
+                               dtype="float32", crs=crs, transform=transform) as dst:
+                dst.write(noisy, 1)
+        out = t / "layers"
+        run(str(PIPE / "change_types.py"), *(str(t / f"{n}.tif") for n in ("hhb", "hha", "hvb", "hva")),
+            "--site", "tipos", "--out-root", str(out), "--sample", "50000")
+        meta = json.loads((out / "tipos" / "types.json").read_text(encoding="utf-8"))
+        assert (out / "tipos" / "types.png").stat().st_size > 0
+        pct = {c["id"]: c["pct"] for c in meta["classes"]}
+        expected = {
+            "water_surface": 100 * brighter_water.mean(),
+            "grew_hv": 100 * grew.mean(),
+            "faded_both": 100 * faded.mean(),
+        }
+        for key, want in expected.items():
+            assert abs(pct.get(key, 0) - want) < 2.5, (key, pct, expected)
+        assert "land_rougher" not in pct and "ambiguous" not in pct, pct
+        assert meta["k"] == 6 and meta["seed"] == 0 and meta["reviewed_by"] is None
+        assert all(c["label_en"] and c["label_es"] for c in meta["classes"])
+        b = meta["bounds_wgs84"]
+        assert b["west"] < b["east"] and b["south"] < b["north"], b
+    print("ok  tipos de cambio: agua más brillante / más estructura / ambos más oscuros "
+          f"({pct['water_surface']:.1f} / {pct['grew_hv']:.1f} / {pct['faded_both']:.1f} %)")
+
+
 def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
     yy, xx = np.mgrid[0:N, 0:N]
     water = (xx - 300) ** 2 + (yy - 300) ** 2 < radius ** 2
@@ -316,6 +373,7 @@ def main() -> None:
         print("ok  fechas invertidas -> rechazado")
 
     test_water_pipeline()
+    test_change_types()
     print("\nTodas las pruebas del pipeline pasaron.")
 
 
