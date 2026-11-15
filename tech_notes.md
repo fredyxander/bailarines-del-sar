@@ -36,6 +36,9 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 
 - 2026-11-15 · #13 · Fredy — **Converter verified on the real files** (via the GeoTIFFs Juan H. produced with `nisar_gcov_to_tif.py`): grid `/science/LSAR/GCOV/grids/frequencyA` read correctly, HHHH and HVHV present, EPSG:32618, 10 × 10 m, both dates on the same 3282 × 2217 grid (pixel-aligned), values float32 **linear power**, no nodata. HH median −15 dB, HV median −21 dB.
 
+- 2026-11-15 · #13 · Fredy — **`--list` on the real June `.h5`** (5.9 GB, from Tinjacá's Drive): assumptions confirmed. `frequencyA` = HHHH + HVHV at **10 m**; `frequencyB` also exists at **80 m** (the converter picks `frequencyA`). `projection` attribute `epsg_code` = 32618; `yCoordinateSpacing` = −10 (north-up). Values are **RTC gamma0**, linear (`units: 1`, NaN fill). Identification block holds `compositeReleaseId` P05023, `trackNumber` 119, `frameNumber` 7, ascending, left-looking, `zeroDopplerStartTime` 2026-06-22T10:31:54.
+- 2026-11-15 · #13 · Fredy — **Cite the product with its DOI: `10.5067/NIL2GCOV-P1`** (NISAR L2 GCOV, product spec 1.5.0) — use it in form field 7.
+
 ## 4. Method decisions
 
 - 2026-11-14 · — · Fredy — Current defaults (to approve in #15): speckle filter **boxcar 5×5 px**, change = **10·log10(after/before)** dB, significance threshold **3 dB**, web images reprojected to EPSG:3857 and averaged in linear power up to **2048 px**. Lee filter available (`--filter lee --enl 4`).
