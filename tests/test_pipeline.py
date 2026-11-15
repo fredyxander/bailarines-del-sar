@@ -214,6 +214,29 @@ def test_water_pipeline() -> None:
         print("ok  CRS geográfico: mapa de cambio sí, área de agua omitida con aviso")
 
 
+def test_summary_guard() -> None:
+    """'Read the dance': facts come only from meta.json, and invented numbers are caught (no API call)."""
+    from pipeline.summarize import allowed_numbers, build_facts, unknown_numbers
+
+    meta = {
+        "before": {"date": "2026-06-22", "collection": "PROVISIONAL", "crid": "P05023"},
+        "after": {"date": "2026-10-20", "collection": "PROVISIONAL", "crid": "P05023"},
+        "stats": {"threshold_db": 3.0, "pct_increase": 20.43, "pct_decrease": 3.56, "median_change_db": 0.64,
+                  "water_km2_before": 329.4817, "water_km2_after": 343.9838},
+    }
+    facts = build_facts({"name": "Test site"}, {"HHHH": meta}, None)
+    assert facts["days_between"] == "120 days", facts["days_between"]
+    assert facts["channels"]["HH"]["share_of_area_where_echo_grew"] == "20.4%"
+    assert facts["open_water_HH"]["change"] == "+14.5 km² (+4.4%)", facts["open_water_HH"]
+    allowed = allowed_numbers(facts)
+    ok = "Between 22 June 2026 and 20 October 2026 (120 days) the echo grew on 20.4% of the area; water 329 → 344 km²."
+    ok_es = "Entre el 22 de junio y el 20 de octubre de 2026 el eco creció en el 20,4 % del área."
+    assert unknown_numbers(ok, allowed) == [], unknown_numbers(ok, allowed)
+    assert unknown_numbers(ok_es, allowed) == [], unknown_numbers(ok_es, allowed)
+    assert unknown_numbers("The lagoon grew by 35% and will flood in 2027.", allowed) == ["35", "2027"]
+    print("ok  resumen IA: datos solo de meta.json y números inventados detectados")
+
+
 def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
     yy, xx = np.mgrid[0:N, 0:N]
     water = (xx - 300) ** 2 + (yy - 300) ** 2 < radius ** 2
@@ -229,6 +252,7 @@ def make_h5(path: Path, radius: float, rng: np.random.Generator) -> None:
 
 def main() -> None:
     test_water_library()
+    test_summary_guard()
     rng = np.random.default_rng(7)
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)

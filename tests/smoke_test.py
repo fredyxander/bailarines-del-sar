@@ -62,6 +62,14 @@ def main() -> None:
                 expect(page.locator("#why")).to_be_visible()
                 expect(page.locator("#why-lead")).not_to_be_empty()
                 print("ok  'Why it changed' visible con datos reales")
+            if (WEB / "layers" / page.locator("#site").input_value() / "summary.json").exists():
+                page.click("#read-btn")
+                expect(page.locator("#read")).to_be_visible()
+                expect(page.locator("#read-text")).not_to_be_empty()
+                expect(page.locator("#read-foot")).to_contain_text("AI")
+                page.click("#read-close")
+                expect(page.locator("#read")).to_be_hidden()
+                print("ok  'Read the dance' se abre, muestra el texto y la etiqueta de IA")
 
         # 2. Modo demo
         page.goto(base + "/?demo=1&pol=HHHH", wait_until="load")
@@ -80,6 +88,8 @@ def main() -> None:
         print("ok  panel: área de agua HH con km²")
         expect(page.locator("#why")).to_be_hidden()
         print("ok  'Why it changed' oculto en el demo (no tiene why.json)")
+        expect(page.locator("#read-btn")).to_be_hidden()
+        print("ok  'Read the dance' oculto en el demo (no tiene resumen)")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")

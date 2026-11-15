@@ -61,6 +61,10 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-15 · #23 · Fredy — Update to Moneeb's note above: #16 is closed and the **real-scene values are in `web/layers/cienaga/HHHH/meta.json`**: water **329.48 → 343.98 km²** (+14.5 km², +4.4 %), Otsu **−15.17 / −13.73 dB**. They match the independent check in this section.
 - 2026-11-15 · #23 · Fredy — If the area cannot be measured (geographic CRS, no valid pixels) `change_detection.py` now **skips the water stats with a warning** instead of aborting; the change map is still produced. The panel shows "Open water · HH" only when the stats exist.
 
+- 2026-11-15 · #24 · Fredy — **"Read the dance"**: `pipeline/summarize.py` sends Claude (`claude-opus-5-5`, effort medium, JSON schema output, server-side fallback on refusal) only the facts built from `meta.json` + the `why.json` lead (prompt `read-the-dance-v1`, in the script). It rejects the text if any number is not in those facts. Output `web/layers/<site>/summary.json` with `model`, `prompt_version`, `generated_at`, `facts`, `reviewed_by` (empty until #25). The app shows it only when `index.json` has `"summary": true`, behind the "AI · Read the dance" button, labelled as AI-drafted. No key in the repo or the browser.
+
+- 2026-11-15 · #24 · Fredy — The published `web/layers/cienaga/summary.json` was **drafted by Claude Opus 5.5 inside the Claude Code session** (no API key on this machine), with the same facts, rules and number check as `pipeline/summarize.py`; the file says so in `generated_with`. The README AI statement and form field 6 must declare it (#26). Rerun the script with a key to regenerate it the reproducible way.
+
 ## 6. App and deployment
 
 - 2026-11-14 · — · Fredy — Every merge to `main` publishes `web/` to GitHub Pages (`gh-pages` branch). Each PR gets a preview at `…/pr-preview/pr-<n>/` and must pass the `checks` job (`tests/test_pipeline.py`, `tests/smoke_test.py`).
