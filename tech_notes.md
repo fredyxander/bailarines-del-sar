@@ -32,6 +32,7 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 
 - 2026-11-14 · — · Fredy — Current defaults (to approve in #15): speckle filter **boxcar 5×5 px**, change = **10·log10(after/before)** dB, significance threshold **3 dB**, web images reprojected to EPSG:3857 and averaged in linear power up to **2048 px**. Lee filter available (`--filter lee --enl 4`).
 - 2026-11-14 · — · Fredy — `--bbox` takes `west,south,east,north` in WGS84 degrees. Negative longitudes work in both scripts (argparse before Python 3.14 needed a fix).
+- 2026-11-15 · #14 · Santiago — Sources: NASA Earthdata (n.d.), What is SAR?; Jensen et al. (2018), Remote Sensing 10(9):1431; NASA JPL NISAR mission page.
 
 ## 5. AI layer
 
