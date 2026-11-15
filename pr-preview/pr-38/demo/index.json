@@ -1,0 +1,19 @@
+{
+  "sites": [
+    {
+      "id": "demo",
+      "name": "Synthetic demo (not real data)",
+      "polarizations": [
+        "HHHH",
+        "HVHV"
+      ],
+      "bounds": {
+        "west": -74.49691004329998,
+        "south": 10.782154205566815,
+        "east": -74.22185728472579,
+        "north": 11.054030844282902
+      }
+    }
+  ],
+  "updated": "2026-11-14T21:49:11Z"
+}
