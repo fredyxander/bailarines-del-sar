@@ -69,6 +69,9 @@ def main() -> None:
         expect(page.locator("#g-dec")).to_have_text("16.0")
         assert page.get_attribute("#g-dec-arc", "stroke-dasharray").startswith("15.9"), "el arco no refleja el valor"
         print("ok  HUD: T+ 084 días y medidores con su arco")
+        expect(page.locator("#water")).to_be_visible()
+        expect(page.locator("#water-val")).to_contain_text("km²")
+        print("ok  panel: área de agua HH con km²")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")

@@ -320,6 +320,18 @@
       if (cell('med')) cell('med').textContent = signed(m.stats.median_change_db);
     });
     tbl.querySelectorAll('[data-pol]').forEach((el) => el.classList.toggle('on', el.dataset.pol === state.pol));
+    // Open-water area (HH only, measured on the native UTM grid by the pipeline)
+    const hh = metas[pols.indexOf('HHHH')];
+    const ws = hh && hh.stats;
+    const hasWater = ws && typeof ws.water_km2_before === 'number' && typeof ws.water_km2_after === 'number';
+    $('water').hidden = !hasWater;
+    if (hasWater) {
+      const d = ws.water_km2_after - ws.water_km2_before;
+      const pct = ws.water_km2_before ? (100 * d) / ws.water_km2_before : 0;
+      const km = (v) => v.toLocaleString('en-US', { maximumFractionDigits: 1 });
+      $('water-val').textContent = `${km(ws.water_km2_before)} → ${km(ws.water_km2_after)} km² (${d >= 0 ? '+' : '−'}${km(Math.abs(d))} · ${pct >= 0 ? '+' : '−'}${Math.abs(pct).toFixed(1)}%)`;
+      $('water-thr').textContent = `Otsu ${ws.water_threshold_db_before.toFixed(1)} / ${ws.water_threshold_db_after.toFixed(1)} dB`;
+    }
   }
 
   function showEmpty() {
