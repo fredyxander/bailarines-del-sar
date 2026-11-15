@@ -70,6 +70,17 @@ def main() -> None:
                 page.click("#read-close")
                 expect(page.locator("#read")).to_be_hidden()
                 print("ok  'Read the dance' se abre, muestra el texto y la etiqueta de IA")
+            if (WEB / "layers" / page.locator("#site").input_value() / "types.json").exists():
+                page.click("#mode-types")
+                expect(page.locator("#mode-types")).to_have_attribute("aria-pressed", "true")
+                expect(page.locator("#types-legend")).to_be_visible()
+                assert page.locator("#types-items li").count() >= 1, "leyenda de tipos vacía"
+                expect(page.locator("#types-note")).to_contain_text("not ground truth")
+                expect(page.locator("#swipe-handle")).to_be_hidden()
+                expect(page).to_have_url(re.compile(r"mode=types"))
+                page.click("#mode-swipe")
+                expect(page.locator("#types-legend")).to_be_hidden()
+                print("ok  'Change types · AI': capa, leyenda con % y aviso de interpretación")
 
         # 2. Modo demo
         page.goto(base + "/?demo=1&pol=HHHH", wait_until="load")
@@ -90,6 +101,8 @@ def main() -> None:
         print("ok  'Why it changed' oculto en el demo (no tiene why.json)")
         expect(page.locator("#read-btn")).to_be_hidden()
         print("ok  'Read the dance' oculto en el demo (no tiene resumen)")
+        expect(page.locator("#mode-types")).to_be_hidden()
+        print("ok  'Change types' oculto en el demo (no tiene types.json)")
 
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")

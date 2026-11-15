@@ -126,6 +126,15 @@ a { color: inherit; }
 .play-icon { font-size: 10px; width: 12px; text-align: center; }
 
 .legend { display: flex; align-items: center; gap: 10px; font: 500 11px var(--mono); color: var(--grey); }
+.types-legend { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.types-legend ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin: 0; padding: 0; list-style: none; font: 500 11px var(--mono); color: #d4d4d4; }
+.types-legend li { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.types-legend li i { width: 10px; height: 10px; border-radius: 2px; }
+.types-legend li b { font-weight: 500; color: var(--white); font-variant-numeric: tabular-nums; }
+.types-note { margin: 0; font: 500 9.5px var(--mono); letter-spacing: .08em; color: var(--grey); text-align: center; }
+.tabs .tab-tag { margin: 0 0 0 4px; padding: 0 4px; font-size: 8.5px; vertical-align: 2px; }
+.mode-types .hud-legend { flex-direction: column; gap: 8px; }
+@media (max-width: 1500px) and (min-width: 721px) { .tab-long { display: none; } }
 .legend .ramp { width: 180px; height: 4px; background: linear-gradient(90deg, #053061, #4393c3, #f7f7f7, #d6604d, #67001f); }
 .legend em { font-style: normal; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; margin-left: 6px; }
 .opacity { display: flex; align-items: center; gap: 10px; font: 500 10px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--grey); }
