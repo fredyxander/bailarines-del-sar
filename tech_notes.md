@@ -52,6 +52,7 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 - 2026-11-14 · — · team — Rules: real data first (Sun 10:00), AI second; if not ready by **Sun 15:00** we ship without it. AI explains and groups, **never predicts** floods or damage. Every AI output is labelled in the UI.
 - 2026-11-14 · — · Fredy — **Area in km² must be computed on the native UTM grid** (before the Web Mercator reprojection), otherwise areas are inflated by the projection.
 - 2026-11-14 · — · Fredy — No API keys in the repository or in the browser. Language-model calls run offline in the pipeline; keys come from environment variables.
+- 2026-11-15 · #23 · Moneeb Hussain — HHHH only. Otsu on speckle-filtered dB (water = finite pixels below the threshold). km² = valid water pixels × |a·e − b·d| of the native affine / 1e6, on a projected metre CRS, before EPSG:3857. Keys in `stats`: `water_km2_before`, `water_km2_after`, `water_threshold_db_before`, `water_threshold_db_after`. Real-scene thresholds wait on #16.
 
 - 2026-11-15 · #23 · Fredy — **Water threshold check** (5×5 boxcar, dB, native UTM grid, histograms in `docs/figures/water_histograms_hh_hv.png`). HH Otsu: **−15.2 dB** (22 Jun) and **−13.8 dB** (20 Oct) → Juan H.'s −15 dB is validated for HH in June. **Do not use −15 dB on HV**: HV Otsu is −20.2 / −19.8 dB (−15 dB would flag ~80% as water).
 - 2026-11-15 · #23 · Fredy — Water area (HH, per-date Otsu): **329.2 km² → 343.7 km²** (+14.5 km², +4.4%); with a fixed −15 dB: 330.7 → 333.0 km². HV Otsu: 349.8 → 356.5 km². Water extent is essentially stable.
