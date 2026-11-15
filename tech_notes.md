@@ -31,7 +31,9 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 ## 4. Method decisions
 
 - 2026-11-14 · — · Fredy — Current defaults (to approve in #15): speckle filter **boxcar 5×5 px**, change = **10·log10(after/before)** dB, significance threshold **3 dB**, web images reprojected to EPSG:3857 and averaged in linear power up to **2048 px**. Lee filter available (`--filter lee --enl 4`).
-- 2026-11-14 · — · Fredy — `--bbox` takes `west,south,east,north` in WGS84 degrees. Negative longitudes work in both scripts (argparse before Python 3.14 needed a fix).
+- 2026-11-14 · — · Fredy — `--bbox` takes `west,south,east,north` in WGS84 degrees. Negative longitudes work in both scripts (argparse before Python 3.14 needed a fix). 
+- 2026-11-15 · #15 · Santiago — Speckle filter: boxcar, 5×5 px (approves Fredy's default). Reason: lagoon-scale features should survive the ~100–130 m smoothing; Lee not yet tested on real NISAR data. Small channels may blur; to be checked on the first real map.
+- 2026-11-15 · #15 · Santiago — Change threshold: 3 dB, about a doubling or halving of the echo (approves Fredy's default). Reason: a commonly used rule of thumb, not yet checked against NISAR data; to be revisited after the first real map.
 
 ## 5. AI layer
 
