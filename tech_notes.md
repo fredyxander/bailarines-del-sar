@@ -62,3 +62,5 @@ Every GitHub issue (#10–#27) says "read `tech_notes.md`" and "add to `tech_not
 ## 8. Open questions and decisions
 
 - Project name (OLEA or a new name) and keep/remove demo mode — #20.
+- 2026-11-15 · fredyxander/bailarines-del-sar#20 · Juan H. — **Project name: Los Bailarines del SAR**, unchanged. Matches the challenge and what the team is registered under; no build, README or deck change needed.
+- 2026-11-15 · fredyxander/bailarines-del-sar#20 · Juan H. — **Demo mode kept.** Labelled synthetic on every screen, and it is the fallback if the real layers fail tonight. Condition: the yellow banner stays as it is. Requires the AI statement in fredyxander/bailarines-del-sar#26 to declare the synthetic scenes.
