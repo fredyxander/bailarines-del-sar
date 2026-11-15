@@ -1,0 +1,44 @@
+{
+  "site": "cienaga",
+  "polarization": "HVHV",
+  "before": {
+    "collection": "PROVISIONAL",
+    "crid": "P05023",
+    "date": "2026-06-22",
+    "file": "before_HVHV.tif"
+  },
+  "after": {
+    "collection": "PROVISIONAL",
+    "crid": "P05023",
+    "date": "2026-10-20",
+    "file": "after_HVHV.tif"
+  },
+  "bounds_wgs84": {
+    "west": -74.70018843497884,
+    "south": 10.749511927031902,
+    "east": -74.3995789273447,
+    "north": 10.950477327907551
+  },
+  "processing": {
+    "speckle_filter": "boxcar",
+    "window_px": 5,
+    "window_m": 82,
+    "enl": null,
+    "web_pixel_m": 16.3,
+    "change_formula": "10*log10(after/before)"
+  },
+  "display": {
+    "db_range": [
+      -26.353264730499674,
+      -12.175511323467049
+    ],
+    "change_limit_db": 4.3560032809596425
+  },
+  "stats": {
+    "threshold_db": 3.0,
+    "valid_pixels": 2848404,
+    "pct_increase": 1.66,
+    "pct_decrease": 2.01,
+    "median_change_db": 0.42
+  }
+}
