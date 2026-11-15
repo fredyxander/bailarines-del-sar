@@ -39,6 +39,10 @@
     "valid_pixels": 1426829,
     "pct_increase": 3.94,
     "pct_decrease": 15.97,
-    "median_change_db": -0.09
+    "median_change_db": -0.09,
+    "water_km2_before": 173.1352,
+    "water_km2_after": 315.296,
+    "water_threshold_db_before": -15.5352,
+    "water_threshold_db_after": -15.3605
   }
 }

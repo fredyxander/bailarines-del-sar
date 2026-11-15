@@ -7,11 +7,13 @@ extendido a dos fechas, filtro de speckle y salida para un mapa web.
 Pasos:
   1. Lee las dos escenas (GeoTIFF; ver nisar_gcov_to_tif.py para NISAR GCOV),
      opcionalmente recortadas a un bbox WGS84.
-  2. Las lleva a una grilla común en Web Mercator (EPSG:3857), promediando en
+  2. Solo HHHH: en una copia filtrada de la grilla nativa (antes de Mercator),
+     umbral de Otsu en dB y área de agua en km².
+  3. Las lleva a una grilla común en Web Mercator (EPSG:3857), promediando en
      potencia lineal (multilook) para no superar --max-size píxeles.
-  3. Filtra el speckle (boxcar o Lee) con la ventana indicada.
-  4. Convierte a dB y calcula el cambio como cociente: 10·log10(después/antes).
-  5. Exporta PNG + meta.json en web/layers/<sitio>/<polarización>/ y
+  4. Filtra el speckle (boxcar o Lee) con la ventana indicada.
+  5. Convierte a dB y calcula el cambio como cociente: 10·log10(después/antes).
+  6. Exporta PNG + meta.json en web/layers/<sitio>/<polarización>/ y
      actualiza web/layers/index.json.
 
 Regla de seguridad: si las dos escenas tienen colección o CRID distintos el
@@ -43,6 +45,8 @@ import rasterio  # noqa: E402
 from rasterio.enums import Resampling  # noqa: E402
 from rasterio.warp import calculate_default_transform, reproject, transform_bounds  # noqa: E402
 from rasterio.windows import from_bounds  # noqa: E402
+
+from water_mask import measure_water  # noqa: E402
 
 WEB_CRS = "EPSG:3857"
 
@@ -175,6 +179,15 @@ def update_index(root: Path, site: str, site_name: str, pol: str, meta: dict) ->
     idx_path.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def native_water(linear: np.ndarray, prof: dict, kind: str, window: int, enl: float) -> dict:
+    """Otsu + km² on a filtered copy. The caller's array is left unchanged."""
+    filtered = speckle_filter(np.copy(linear), kind, window, enl)
+    try:
+        return measure_water(filtered, prof["transform"], prof["crs"])
+    except ValueError as exc:
+        raise SystemExit(f"Área de agua: {exc}") from exc
+
+
 def slug(text: str) -> str:
     s = re.sub(r"[^a-z0-9-]+", "-", text.lower()).strip("-")
     if not s:
@@ -239,6 +252,14 @@ def main() -> None:
 
     b_lin, b_prof = read_linear(args.before, args.band, bbox, args.db)
     a_lin, a_prof = read_linear(args.after, args.band, bbox, args.db)
+    # HHHH only, on the native metre grid, before the Web Mercator warp.
+    # The copies are filtered here; b_lin / a_lin stay raw for the web path.
+    water = None
+    if pol == "HHHH":
+        water = (
+            native_water(b_lin, b_prof, args.filter, args.window, args.enl),
+            native_water(a_lin, a_prof, args.filter, args.window, args.enl),
+        )
     grid = web_grid(b_prof, args.max_size)
     b_lin = to_grid(b_lin, b_prof, grid)
     a_lin = to_grid(a_lin, a_prof, grid)
@@ -289,6 +310,12 @@ def main() -> None:
             "median_change_db": round(float(np.median(change[valid])), 2),
         },
     }
+    if water is not None:
+        before_w, after_w = water
+        meta["stats"]["water_km2_before"] = round(before_w["km2"], 4)
+        meta["stats"]["water_km2_after"] = round(after_w["km2"], 4)
+        meta["stats"]["water_threshold_db_before"] = round(before_w["threshold_db"], 4)
+        meta["stats"]["water_threshold_db_after"] = round(after_w["threshold_db"], 4)
     (out / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     update_index(Path(args.out_root), site, args.site_name or site, pol, meta)
     print(json.dumps(meta, indent=2, ensure_ascii=False))
