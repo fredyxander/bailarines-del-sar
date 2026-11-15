@@ -107,6 +107,8 @@
     afterPane.style.clip = state.mode === 'swipe' ? `rect(${nw.y}px, ${se.x}px, ${se.y}px, ${x}px)` : '';
     handle.style.left = (state.pct * 100) + '%';
     handle.setAttribute('aria-valuenow', Math.round(state.pct * 100));
+    // HUD cursor: share of the map showing the 'after' date (left of the line = before)
+    $('hud-cursor').style.left = `${12 + 76 * (1 - state.pct)}%`;
   }
   function setPct(clientX) {
     const r = wrap.getBoundingClientRect();
@@ -183,6 +185,7 @@
   // ---- Rendering --------------------------------------------------------------
   function setMode(mode) {
     state.mode = mode;
+    document.body.classList.toggle('mode-change', mode === 'change');
     if (mode !== 'swipe') stop();
     $('play').hidden = !state.meta;
     $('mode-swipe').setAttribute('aria-pressed', mode === 'swipe');
@@ -258,10 +261,16 @@
 
     $('date-left').textContent = fmtDate(meta.before.date);
     $('date-right').textContent = fmtDate(meta.after.date);
-    $('hero-dates').innerHTML = '';
-    const hb = document.createElement('span'); hb.className = 'b'; hb.textContent = fmtDate(meta.before.date);
-    const ha = document.createElement('span'); ha.className = 'a'; ha.textContent = fmtDate(meta.after.date);
-    $('hero-dates').append(hb, ' → ', ha, ` · ${meta.after.collection} ${meta.after.crid}`);
+    // Launch HUD: milestones, T+ days, gauges
+    $('ms-before').textContent = fmtDate(meta.before.date);
+    $('ms-after').textContent = fmtDate(meta.after.date);
+    const days = Math.round((Date.parse(meta.after.date) - Date.parse(meta.before.date)) / 864e5);
+    $('hud-days').textContent = String(days).padStart(3, '0');
+    $('hud-meta').textContent = ` · ${polLabel(meta.polarization)} · ${meta.after.collection} ${meta.after.crid}`;
+    for (const [id, v] of [['g-dec', meta.stats.pct_decrease], ['g-inc', meta.stats.pct_increase]]) {
+      $(id).textContent = v.toFixed(1);
+      $(id + '-arc').setAttribute('stroke-dasharray', `${Math.min(100, Math.max(0, v))} 100`);
+    }
     renderScenes(meta);
     markTimeline(meta);
 

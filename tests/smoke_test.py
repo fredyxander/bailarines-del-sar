@@ -64,6 +64,12 @@ def main() -> None:
         expect(page.locator("#empty")).to_be_hidden()
         print("ok  demo: aviso visible y capas cargadas")
 
+        # HUD estilo transmisión: T+ días entre escenas y medidores
+        expect(page.locator("#hud-days")).to_have_text("084")
+        expect(page.locator("#g-dec")).to_have_text("16.0")
+        assert page.get_attribute("#g-dec-arc", "stroke-dasharray").startswith("15.9"), "el arco no refleja el valor"
+        print("ok  HUD: T+ 084 días y medidores con su arco")
+
         # Vista inicial: "Two dates", con la línea visible y un vaivén de pista
         expect(page.locator("#mode-swipe")).to_have_attribute("aria-pressed", "true")
         expect(page.locator("#swipe-handle")).to_be_visible()
@@ -93,6 +99,8 @@ def main() -> None:
         page.mouse.up()
         left = float(handle.evaluate("e => e.style.left").rstrip("%"))
         assert 75 < left < 85, f"la barra no se movió con el mouse ({left}%)"
+        cur = float(page.evaluate("document.getElementById('hud-cursor').style.left").rstrip("%"))
+        assert 22 < cur < 32, f"el cursor del HUD no sigue a la línea ({cur}%)"
         clip = page.evaluate("[...document.querySelectorAll('.leaflet-pane')].find(e => e.className.includes('after')).style.clip")
         assert clip.startswith("rect("), clip
         handle.focus()
