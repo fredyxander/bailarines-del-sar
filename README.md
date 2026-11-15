@@ -10,8 +10,8 @@ Una aplicación web interactiva que muestra **cómo cambia la superficie de la T
 
 **Demo en vivo:** https://fredyxander.github.io/bailarines-del-sar/
 
-- **Zonas de estudio:** _por definir (2 zonas)_
-- **Pregunta:** _por definir (una frase)_
+- **Zonas de estudio:** Ciénaga Grande de Santa Marta, Magdalena, Colombia (`-74.70,10.75,-74.40,10.95`, WGS84). Segundo panel (Península Antártica): descartado.
+- **Pregunta:** **ES:** Entre el 22 de junio y el 20 de octubre de 2026, ¿dónde cambió la señal de radar sobre la Ciénaga Grande, y permite la comparación de HH con HV saber si el cambio ocurrió en la superficie o en la vegetación sobre ella? **EN:** Between 22 June and 20 October 2026, where did the radar signal over the Ciénaga Grande change — and does comparing HH with HV tell us whether the change happened at the surface or in the vegetation above it?
 
 ## Presentación del equipo
 
