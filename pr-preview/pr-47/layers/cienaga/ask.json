@@ -1,0 +1,232 @@
+{
+  "questions": [
+    {
+      "id": "grow",
+      "en": {
+        "q": "Did the lagoon grow?",
+        "a": "Barely. Open water, measured on the HH channel, went from 329 km² on 22 June 2026 to 344 km² on 20 October 2026: +14.5 km² (+4.4%). The size of the lagoon hardly changed. What changed was the surface of the water."
+      },
+      "es": {
+        "q": "¿Creció la ciénaga?",
+        "a": "Casi nada. El agua abierta, medida en el canal HH, pasó de 329 km² el 22 de junio de 2026 a 344 km² el 20 de octubre de 2026: +14,5 km² (+4,4 %). El tamaño de la ciénaga casi no cambió. Lo que cambió fue la superficie del agua."
+      },
+      "also": {
+        "en": [
+          "Is there more water now?",
+          "How big is the open water?",
+          "Did the water area change?",
+          "How many km² of water are there?",
+          "Did the water level rise?"
+        ],
+        "es": [
+          "¿Hay más agua ahora?",
+          "¿Cambió el área de agua?",
+          "¿Qué tan grande es el espejo de agua?",
+          "¿Cuántos km² de agua hay?",
+          "¿Subió el nivel del agua?"
+        ]
+      }
+    },
+    {
+      "id": "what",
+      "en": {
+        "q": "What changed, then?",
+        "a": "The radar echo. In HH it grew by 3 dB or more on 20.4% of the area and faded on 3.6%. Most of the rise sits on open water: there the HH echo rose by about +3 dB, while over land it did not move."
+      },
+      "es": {
+        "q": "Entonces, ¿qué cambió?",
+        "a": "El eco del radar. En HH aumentó 3 dB o más en el 20,4 % del área y bajó en el 3,6 %. La mayor parte de la subida está sobre el agua abierta: ahí el eco HH subió cerca de +3 dB, mientras que sobre tierra no se movió."
+      },
+      "also": {
+        "en": [
+          "What happened between the two dates?",
+          "Where did the signal change?",
+          "How much of the area changed?",
+          "What does the change map show?",
+          "What percentage of the area got brighter?"
+        ],
+        "es": [
+          "¿Qué pasó entre las dos fechas?",
+          "¿Dónde cambió la señal?",
+          "¿Cuánta área cambió?",
+          "¿Qué muestra el mapa de cambio?",
+          "¿Qué porcentaje del área se volvió más brillante?"
+        ]
+      }
+    },
+    {
+      "id": "hhhv",
+      "en": {
+        "q": "Why compare HH with HV?",
+        "a": "Because they listen to different things. HH responds strongly to the surface itself; HV rises when the pulse scatters inside vegetation. HV grew on only 1.7% of the area, and over the water it rose only about +0.5 dB. HH up with HV almost flat points to a change at the water surface, not to new plants above it."
+      },
+      "es": {
+        "q": "¿Por qué comparar HH con HV?",
+        "a": "Porque escuchan cosas distintas. HH responde sobre todo a la superficie; HV sube cuando el pulso rebota dentro de la vegetación. HV aumentó solo en el 1,7 % del área y sobre el agua subió apenas cerca de +0,5 dB. HH arriba con HV casi plano apunta a un cambio en la superficie del agua, no a plantas nuevas encima."
+      },
+      "also": {
+        "en": [
+          "What is the difference between HH and HV?",
+          "What does HV measure?",
+          "What does HH mean?",
+          "Was it new vegetation?",
+          "Is it plants or water?",
+          "Why use two polarizations?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre HH y HV?",
+          "¿Qué mide HV?",
+          "¿Qué significa HH?",
+          "¿Fue vegetación nueva?",
+          "¿Son plantas o agua?",
+          "¿Por qué usar dos polarizaciones?"
+        ]
+      }
+    },
+    {
+      "id": "wind",
+      "en": {
+        "q": "Was it the wind?",
+        "a": "Not the regional wind. At the overpass hour the wind was 3.4 times weaker on the brighter date (NASA POWER), so a windier surface does not explain it. Still open, to test and not claimed: a local breeze too small for that wind model, rain at the overpass time, or very shallow water near the shore."
+      },
+      "es": {
+        "q": "¿Fue el viento?",
+        "a": "No el viento regional. A la hora del paso del satélite el viento fue 3,4 veces más débil en la fecha más brillante (NASA POWER), así que una superficie más agitada por el viento no lo explica. Siguen abiertas, para probar y sin afirmarlas: una brisa local que ese modelo no alcanza a ver, lluvia en el momento del paso o agua muy somera cerca de la orilla."
+      },
+      "also": {
+        "en": [
+          "Could wind explain it?",
+          "Was it rain?",
+          "What caused the brighter water?",
+          "Could it be waves or a breeze?"
+        ],
+        "es": [
+          "¿Lo explica el viento?",
+          "¿Fue la lluvia?",
+          "¿Por qué el agua se ve más brillante?",
+          "¿Pudo ser una brisa u olas?"
+        ]
+      }
+    },
+    {
+      "id": "types",
+      "en": {
+        "q": "What do the colours in “Change types” mean?",
+        "a": "They are groups found by k-means, an unsupervised AI method, from how HH and HV changed together, then named by fixed rules. Red, water surface brighter: 19.3% of the area. Green, more structure such as vegetation: 3.4%. Blue, both channels darker: 2.3%. The other 75.0% shows no significant change. The names are interpretations, not ground truth."
+      },
+      "es": {
+        "q": "¿Qué significan los colores de “Change types”?",
+        "a": "Son grupos que encontró k-means, un método de IA no supervisado, según cómo cambiaron HH y HV juntos; luego se nombran con reglas fijas. Rojo, agua más brillante: 19,3 % del área. Verde, más estructura, como vegetación: 3,4 %. Azul, ambos canales más oscuros: 2,3 %. El 75,0 % restante no cambia de forma significativa. Los nombres son interpretaciones, no verdad de campo."
+      },
+      "also": {
+        "en": [
+          "What does red mean on the map?",
+          "What does green mean?",
+          "What does blue mean?",
+          "How did the AI group the pixels?",
+          "What is k-means?",
+          "How were the changes classified?"
+        ],
+        "es": [
+          "¿Qué significa el rojo en el mapa?",
+          "¿Qué significa el verde?",
+          "¿Qué significa el azul?",
+          "¿Cómo agrupó la IA los píxeles?",
+          "¿Qué es k-means?",
+          "¿Cómo se clasificaron los cambios?"
+        ]
+      }
+    },
+    {
+      "id": "trust",
+      "en": {
+        "q": "How far can I trust these numbers?",
+        "a": "Both scenes come from the same NISAR collection, PROVISIONAL (CRID P05023), 120 days apart, and were processed the same way: a 5×5 px speckle filter and a change of 3 dB or more. The app refuses to compare scenes across collections or CRIDs. PROVISIONAL data come before the VALIDATED stage, so small calibration differences are possible."
+      },
+      "es": {
+        "q": "¿Qué tanto puedo confiar en estos números?",
+        "a": "Las dos escenas vienen de la misma colección de NISAR, PROVISIONAL (CRID P05023), con 120 días de diferencia, y se procesaron igual: filtro de speckle de 5×5 px y un cambio de 3 dB o más. La app se niega a comparar escenas de colecciones o CRID distintos. Los datos PROVISIONAL son anteriores a la etapa VALIDATED, así que puede haber pequeñas diferencias de calibración."
+      },
+      "also": {
+        "en": [
+          "Is the data reliable?",
+          "Is the data calibrated?",
+          "What does PROVISIONAL mean?",
+          "How was the data processed?",
+          "What is the CRID?",
+          "What filter was used?"
+        ],
+        "es": [
+          "¿Son confiables los datos?",
+          "¿Están calibrados los datos?",
+          "¿Qué significa PROVISIONAL?",
+          "¿Cómo se procesaron los datos?",
+          "¿Qué es el CRID?",
+          "¿Qué filtro se usó?"
+        ]
+      }
+    },
+    {
+      "id": "limits",
+      "en": {
+        "q": "What can two dates not tell us?",
+        "a": "A trend or a cause. Two dates cannot show whether this is a one-off change or part of a seasonal cycle, and they cannot prove why it happened. We do not claim damage, long-term change or predictions. NISAR revisits every 12 days, so a longer series and rainfall for both dates (NASA GPM IMERG) are the next checks."
+      },
+      "es": {
+        "q": "¿Qué no pueden decirnos dos fechas?",
+        "a": "Una tendencia ni una causa. Con dos fechas no se sabe si es un cambio puntual o parte de un ciclo de temporada, ni se puede probar por qué ocurrió. No afirmamos daños, cambios de largo plazo ni predicciones. NISAR vuelve cada 12 días, así que una serie más larga y la lluvia de ambas fechas (NASA GPM IMERG) son las próximas pruebas."
+      },
+      "also": {
+        "en": [
+          "Will it flood next year?",
+          "Is this climate change?",
+          "What caused the change?",
+          "Is this a trend?",
+          "Was there damage?",
+          "What will happen next?"
+        ],
+        "es": [
+          "¿Se va a inundar el próximo año?",
+          "¿Es cambio climático?",
+          "¿Qué causó el cambio?",
+          "¿Es una tendencia?",
+          "¿Hubo daños?",
+          "¿Qué va a pasar?"
+        ]
+      }
+    },
+    {
+      "id": "clouds",
+      "en": {
+        "q": "How does the radar see through clouds?",
+        "a": "NISAR sends its own L-band microwave pulse, about 24 cm long, and records the echo, so it works day and night, through cloud and smoke. Calm water reflects the pulse away and looks dark; rough ground and tree crowns scatter it back and look bright."
+      },
+      "es": {
+        "q": "¿Cómo ve el radar a través de las nubes?",
+        "a": "NISAR envía su propio pulso de microondas en banda L, de unos 24 cm, y registra el eco, así que funciona de día y de noche, a través de nubes y humo. El agua en calma refleja el pulso lejos y se ve oscura; el suelo rugoso y las copas de los árboles lo devuelven y se ven brillantes."
+      },
+      "also": {
+        "en": [
+          "What is NISAR?",
+          "What is L-band?",
+          "How can the satellite see at night?",
+          "How does radar work?",
+          "Why is water dark in the image?",
+          "What wavelength does it use?"
+        ],
+        "es": [
+          "¿Qué es NISAR?",
+          "¿Qué es la banda L?",
+          "¿Cómo ve el satélite de noche?",
+          "¿Cómo funciona el radar?",
+          "¿Por qué el agua se ve oscura?",
+          "¿Qué longitud de onda usa?"
+        ]
+      }
+    }
+  ],
+  "model": "Claude Opus 5.5",
+  "generated_with": "Claude Code session (Claude Opus 5.5) from web/layers/cienaga/facts.json only; every number checked by pipeline/ask.py.",
+  "generated_at": "2026-11-15T19:29:42Z",
+  "reviewed_by": null
+}
